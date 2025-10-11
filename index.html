@@ -697,13 +697,23 @@
           </div>
         </div>
         
-        <!-- Slideshow Preview -->
-        <div id="slideshowPreview" class="preview-section">
-          <div class="preview-header">
-            🔍 Preview: Original Slideshow
+        <!-- Slideshow Preview (Conditional) -->
+        <div id="slideshowPreview" class="preview-section" style="display:none;">
+          <div class="preview-header" id="previewHeader">
+            🔍 Preview: Slideshow
           </div>
           <iframe id="previewIframe" class="preview-iframe" src="" frameborder="0"></iframe>
           <div class="preview-url" id="previewUrl"></div>
+        </div>
+        
+        <!-- PowerPoint File Preview (Filename only) -->
+        <div id="pptxFilePreview" class="preview-section" style="display:none; background: #fff9e6; border-color: #FF9800;">
+          <div class="preview-header" style="color: #e65100;">
+            📄 PowerPoint File Selected
+          </div>
+          <div style="padding: 15px; background: white; border-radius: 8px; font-weight: 600; color: #333;">
+            <span id="pptxFileName"></span>
+          </div>
         </div>
       </div>
       
@@ -966,18 +976,27 @@
     function setupSlideshowPreview() {
       const iframe = document.getElementById('previewIframe');
       const urlDisplay = document.getElementById('previewUrl');
+      const previewSection = document.getElementById('slideshowPreview');
+      const previewHeader = document.getElementById('previewHeader');
       
       if (slideshowUrl) {
         // Convert Google Slides URL to embed format
         let embedUrl = slideshowUrl;
         if (slideshowUrl.includes('docs.google.com/presentation')) {
           embedUrl = slideshowUrl.replace('/edit', '/embed');
+          previewHeader.textContent = '🔍 Preview: Original Slideshow';
+          previewSection.style.display = 'block';
+          iframe.src = embedUrl;
+          urlDisplay.textContent = `URL: ${slideshowUrl}`;
+        } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com')) {
+          // PowerPoint URL - use Office viewer
+          const encodedUrl = encodeURIComponent(slideshowUrl);
+          embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+          previewHeader.textContent = '🔍 Preview: Original PowerPoint';
+          previewSection.style.display = 'block';
+          iframe.src = embedUrl;
+          urlDisplay.textContent = `URL: ${slideshowUrl}`;
         }
-        
-        iframe.src = embedUrl;
-        urlDisplay.textContent = `URL: ${slideshowUrl}`;
-      } else {
-        document.getElementById('slideshowPreview').style.display = 'none';
       }
     }
     
@@ -985,6 +1004,37 @@
       // Slideshow version radio buttons
       document.querySelectorAll('input[name="slideshowVersion"]').forEach(radio => {
         radio.addEventListener('change', handleSlideshowVersionChange);
+      });
+      
+      // New Google Slides URL input - update preview on input
+      document.getElementById('newGoogleSlidesUrl').addEventListener('input', (e) => {
+        const selectedVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+        if (selectedVersion === 'copy') {
+          updateCopyPreview(e.target.value);
+        }
+        validateForm();
+      });
+      
+      // PowerPoint URL input - update preview on input
+      document.getElementById('pptxUrl').addEventListener('input', (e) => {
+        const selectedVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+        if (selectedVersion === 'download') {
+          updatePowerPointUrlPreview(e.target.value);
+        }
+        validateForm();
+      });
+      
+      // PowerPoint file upload - show filename
+      document.getElementById('pptxFile').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const selectedVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+        
+        if (file && selectedVersion === 'download') {
+          document.getElementById('pptxFileName').textContent = file.name;
+          document.getElementById('pptxFilePreview').style.display = 'block';
+          document.getElementById('slideshowPreview').style.display = 'none';
+        }
+        validateForm();
       });
       
       // Timing mode radio buttons
@@ -1018,7 +1068,88 @@
       document.getElementById('copyUrlInput').style.display = value === 'copy' ? 'block' : 'none';
       document.getElementById('downloadInput').style.display = value === 'download' ? 'block' : 'none';
       
+      // Handle preview visibility
+      const slideshowPreview = document.getElementById('slideshowPreview');
+      const pptxFilePreview = document.getElementById('pptxFilePreview');
+      const iframe = document.getElementById('previewIframe');
+      const urlDisplay = document.getElementById('previewUrl');
+      const previewHeader = document.getElementById('previewHeader');
+      
+      // Hide all previews first
+      slideshowPreview.style.display = 'none';
+      pptxFilePreview.style.display = 'none';
+      
+      if (value === 'original') {
+        // Show original slideshow preview
+        if (slideshowUrl) {
+          let embedUrl = slideshowUrl;
+          if (slideshowUrl.includes('docs.google.com/presentation')) {
+            embedUrl = slideshowUrl.replace('/edit', '/embed');
+            previewHeader.textContent = '🔍 Preview: Original Slideshow';
+          } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com')) {
+            const encodedUrl = encodeURIComponent(slideshowUrl);
+            embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+            previewHeader.textContent = '🔍 Preview: Original PowerPoint';
+          }
+          iframe.src = embedUrl;
+          urlDisplay.textContent = `URL: ${slideshowUrl}`;
+          slideshowPreview.style.display = 'block';
+        }
+      } else if (value === 'copy') {
+        // Preview will update when user enters URL (handled in input event listener)
+        const newUrl = document.getElementById('newGoogleSlidesUrl').value;
+        if (newUrl) {
+          updateCopyPreview(newUrl);
+        }
+      } else if (value === 'download') {
+        // Check if file is uploaded
+        const pptxFile = document.getElementById('pptxFile').files[0];
+        const pptxUrl = document.getElementById('pptxUrl').value;
+        
+        if (pptxFile) {
+          document.getElementById('pptxFileName').textContent = pptxFile.name;
+          pptxFilePreview.style.display = 'block';
+        } else if (pptxUrl) {
+          updatePowerPointUrlPreview(pptxUrl);
+        }
+      }
+      
       validateForm();
+    }
+    
+    function updateCopyPreview(url) {
+      const slideshowPreview = document.getElementById('slideshowPreview');
+      const iframe = document.getElementById('previewIframe');
+      const urlDisplay = document.getElementById('previewUrl');
+      const previewHeader = document.getElementById('previewHeader');
+      
+      if (url && url.includes('docs.google.com/presentation')) {
+        const embedUrl = url.replace('/edit', '/embed');
+        previewHeader.textContent = '🔍 Preview: Your Copy';
+        iframe.src = embedUrl;
+        urlDisplay.textContent = `URL: ${url}`;
+        slideshowPreview.style.display = 'block';
+      } else {
+        slideshowPreview.style.display = 'none';
+      }
+    }
+    
+    function updatePowerPointUrlPreview(url) {
+      const slideshowPreview = document.getElementById('slideshowPreview');
+      const iframe = document.getElementById('previewIframe');
+      const urlDisplay = document.getElementById('previewUrl');
+      const previewHeader = document.getElementById('previewHeader');
+      
+      if (url && (url.includes('onedrive.live.com') || url.includes('sharepoint.com') || url.includes('1drv.ms'))) {
+        const encodedUrl = encodeURIComponent(url);
+        const embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+        previewHeader.textContent = '🔍 Preview: PowerPoint';
+        iframe.src = embedUrl;
+        urlDisplay.textContent = `URL: ${url}`;
+        slideshowPreview.style.display = 'block';
+      } else {
+        slideshowPreview.style.display = 'none';
+      }
     }
     
     function handleTimingModeChange(e) {
