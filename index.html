@@ -980,22 +980,27 @@
       const previewHeader = document.getElementById('previewHeader');
       
       if (slideshowUrl) {
-        // Convert Google Slides URL to embed format
         let embedUrl = slideshowUrl;
+        
         if (slideshowUrl.includes('docs.google.com/presentation')) {
+          // Google Slides
           embedUrl = slideshowUrl.replace('/edit', '/embed');
           previewHeader.textContent = '🔍 Preview: Original Slideshow';
           previewSection.style.display = 'block';
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
-        } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com')) {
-          // PowerPoint URL - use Office viewer
-          const encodedUrl = encodeURIComponent(slideshowUrl);
-          embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+        } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
+          // PowerPoint URL - use SharePoint native embed
+          if (!slideshowUrl.includes('action=embedview')) {
+            const separator = slideshowUrl.includes('?') ? '&' : '?';
+            embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
+          }
           previewHeader.textContent = '🔍 Preview: Original PowerPoint';
           previewSection.style.display = 'block';
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
+          
+          console.log('[PREVIEW] Initial PowerPoint embed URL:', embedUrl);
         }
       }
     }
