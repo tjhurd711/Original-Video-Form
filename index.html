@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customize Your Memorial Video</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+    
+    .header p {
+      opacity: 0.95;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    
+    .content {
+      padding: 40px 30px;
+    }
+    
+    .intro-box {
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      border-left: 4px solid #667eea;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+      line-height: 1.7;
+    }
+    
+    .intro-box h2 {
+      color: #667eea;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    
+    .section {
+      background: #f9f9f9;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+    }
+    
+    .section:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .section-icon {
+      font-size: 28px;
+    }
+    
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 15px;
+    }
+    
+    .form-group .help-text {
+      font-size: 13px;
+      color: #777;
+      font-weight: 400;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+    
+    .form-group select,
+    .form-group input[type="number"],
+    .form-group input[type="text"],
+    .form-group input[type="url"],
+    .form-group input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+    
+    .radio-option:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+    
+    .radio-option.selected {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+    
+    .radio-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    
+    .radio-option-content {
+      flex: 1;
+    }
+    
+    .radio-option-label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+    
+    .radio-option-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.4;
+    }
+    
+    .conditional-input {
+      margin-top: 12px;
+      padding: 12px;
+      background: #f5f5f5;
+      border-radius: 6px;
+    }
+    
+    .info-box {
+      padding: 16px;
+      background: #fff9e6;
+      border-left: 4px solid #FFC107;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #886600;
+      line-height: 1.5;
+    }
+    
+    .info-box.blue {
+      background: #e3f2fd;
+      border-left-color: #2196F3;
+      color: #1565c0;
+    }
+    
+    /* Song Library */
+    .library-section {
+      background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%);
+      border: 2px solid #FF9800;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .library-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #e65100;
+    }
+    
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    
+    .library-song-card {
+      background: white;
+      border: 2px solid #FFE0B2;
+      border-radius: 10px;
+      padding: 12px;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .library-song-card:hover {
+      border-color: #FF9800;
+      box-shadow: 0 4px 12px rgba(255, 152, 0, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .library-song-card.added {
+      border-color: #4CAF50;
+      background: #f1f8f4;
+    }
+    
+    .library-song-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.3;
+    }
+    
+    .library-song-controls {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+    
+    .btn-play {
+      background: #2196F3;
+      color: white;
+    }
+    
+    .btn-play:hover {
+      background: #0b7dda;
+    }
+    
+    .btn-play.playing {
+      background: #FF9800;
+    }
+    
+    .btn-add-library {
+      flex: 1;
+      padding: 8px 12px;
+      background: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-add-library:hover:not(:disabled) {
+      background: #f57c00;
+    }
+    
+    .btn-add-library:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    .btn-add-library.added {
+      background: #4CAF50;
+    }
+    
+    /* Song List */
+    .song-list {
+      margin-bottom: 20px;
+    }
+    
+    .song-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    
+    .song-item:hover {
+      border-color: #667eea;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    }
+    
+    .song-item.new-upload {
+      border-color: #4CAF50;
+      background: #f1f8f4;
+    }
+    
+    .song-item.library-song {
+      border-color: #FF9800;
+      background: #fff9f0;
+    }
+    
+    .song-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .song-position {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    
+    .song-name {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .song-badge {
+      background: #4CAF50;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    
+    .song-badge.library {
+      background: #FF9800;
+    }
+    
+    .song-controls {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    
+    .btn-move {
+      background: #f5f5f5;
+      color: #666;
+      border: 1px solid #ddd;
+    }
+    
+    .btn-move:hover {
+      background: #e0e0e0;
+    }
+    
+    .btn-move:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    
+    .btn-danger {
+      background: #f44336;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #d32f2f;
+    }
+    
+    .upload-section {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      border: 2px dashed #ccc;
+    }
+    
+    .upload-section.max-reached {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .upload-label {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .upload-label:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
+    
+    .upload-label.disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    /* Presentation Preview */
+    .preview-section {
+      margin-top: 15px;
+      padding: 20px;
+      background: #f0f7ff;
+      border: 2px solid #2196F3;
+      border-radius: 8px;
+    }
+    
+    .preview-header {
+      font-weight: 600;
+      color: #1565c0;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .preview-iframe {
+      width: 100%;
+      height: 400px;
+      border: 2px solid #90caf9;
+      border-radius: 8px;
+      background: white;
+    }
+    
+    .preview-url {
+      margin-top: 10px;
+      padding: 10px;
+      background: white;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #666;
+      word-break: break-all;
+    }
+    
+    /* Submit Button */
+    .submit-section {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 3px solid #e0e0e0;
+      text-align: center;
+    }
+    
+    .btn-submit {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 50px;
+      font-size: 20px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .submit-note {
+      margin-top: 15px;
+      color: #999;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 16px 24px;
+      background: #333;
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      z-index: 1000;
+      max-width: 400px;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .toast.success {
+      background: #4CAF50;
+    }
+    
+    .toast.error {
+      background: #f44336;
+    }
+    
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    
+    .loading-overlay.show {
+      display: flex;
+    }
+    
+    .loading-content {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 400px;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .loading-subtext {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    @media (max-width: 768px) {
+      .header h1 { font-size: 26px; }
+      .section { padding: 20px; }
+      .library-grid { grid-template-columns: 1fr; }
+      .song-controls { flex-wrap: wrap; }
+      .toast { right: 20px; left: 20px; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✨ Customize Your Memorial Video</h1>
+      <p>Review your slideshow and choose your preferences below</p>
+    </div>
+    
+    <div class="content">
+      <div class="intro-box">
+        <h2>📋 Next Steps</h2>
+        <p>We've created a draft slideshow from your photos. Please review the settings below and confirm your slideshow link. Once you submit, we'll create your memorial video and send it to you via email in 5-15 minutes.</p>
+      </div>
+      
+      <!-- SECTION 1: Slideshow Confirmation -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">📊</span>
+          <span class="section-title">Confirm Your Slideshow</span>
+        </div>
+        
+        <div class="info-box blue">
+          We've prepared a draft slideshow for you. Please confirm which version you'd like to use for your video.
+        </div>
+        
+        <div class="form-group">
+          <label>
+            Did you edit the document using the link shared by MemorialVideo.AI? Or, did you make a copy/download a separate version?
+            <div class="help-text">Note: If you did not actively press "make a copy" or "download", then you likely edited the slideshow document provided.</div>
+          </label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="slideshowVersion" value="original" checked>
+              <div class="radio-option-content">
+                <span class="radio-option-label">I edited the document using the link provided</span>
+                <span class="radio-option-desc">Use the original slideshow that was shared with you</span>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="slideshowVersion" value="copy">
+              <div class="radio-option-content">
+                <span class="radio-option-label">I made a copy and used a separate online document for my revisions</span>
+                <span class="radio-option-desc">Provide a new Google Slides URL (e.g., slideshow_v2)</span>
+                <div class="conditional-input" id="copyUrlInput" style="display:none;">
+                  <label for="newGoogleSlidesUrl" style="font-size: 13px; margin-bottom: 6px;">New Google Slides URL:</label>
+                  <input type="url" id="newGoogleSlidesUrl" name="newGoogleSlidesUrl" placeholder="https://docs.google.com/presentation/d/...">
+                </div>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="slideshowVersion" value="download">
+              <div class="radio-option-content">
+                <span class="radio-option-label">I downloaded a version to my PC</span>
+                <span class="radio-option-desc">Upload your PowerPoint file (.pptx) or provide a PowerPoint URL</span>
+                <div class="conditional-input" id="downloadInput" style="display:none;">
+                  <div style="margin-bottom: 12px;">
+                    <label for="pptxFile" style="font-size: 13px; margin-bottom: 6px;">Upload PowerPoint File:</label>
+                    <input type="file" id="pptxFile" name="pptxFile" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+                  </div>
+                  <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
+                    <div style="text-align: center; margin-bottom: 8px; font-weight: 600; font-size: 13px;">OR</div>
+                    <label for="pptxUrl" style="font-size: 13px; margin-bottom: 6px;">PowerPoint URL (OneDrive/SharePoint):</label>
+                    <input type="url" id="pptxUrl" name="pptxUrl" placeholder="https://onedrive.live.com/... or https://sharepoint.com/...">
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        
+        <!-- Slideshow Preview -->
+        <div id="slideshowPreview" class="preview-section">
+          <div class="preview-header">
+            🔍 Preview: Original Slideshow
+          </div>
+          <iframe id="previewIframe" class="preview-iframe" src="" frameborder="0"></iframe>
+          <div class="preview-url" id="previewUrl"></div>
+        </div>
+      </div>
+      
+      <!-- SECTION 2: Choose Music -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">🎵</span>
+          <span class="section-title">Choose Your Music</span>
+        </div>
+        
+        <div class="library-section">
+          <div class="library-header">
+            🎼 Song Library - Choose from our curated memorial music
+          </div>
+          <div class="library-grid" id="libraryGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Your Selected Songs (drag to reorder, max 6 total)</label>
+          <div id="songList" class="song-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        
+        <div class="upload-section" id="uploadSection">
+          <label class="upload-label" id="uploadLabel">
+            📤 Upload Your Own Songs (MP3)
+            <input type="file" id="customSongUpload" accept=".mp3,audio/mpeg" multiple style="display: none;">
+          </label>
+          <div style="margin-top: 8px; font-size: 13px; color: #666;">
+            <span id="songCountDisplay">0 of 6 songs</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SECTION 3: Video Timing -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">⏱️</span>
+          <span class="section-title">Video Timing</span>
+        </div>
+        
+        <div class="form-group">
+          <label>How should we time your video?</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="timingMode" value="perSlide">
+              <div class="radio-option-content">
+                <span class="radio-option-label">Per Slide Duration</span>
+                <span class="radio-option-desc">Set how many seconds each slide should display</span>
+                <div class="conditional-input" id="perSlideInput" style="display:none;">
+                  <label for="perSlideSec" style="font-size: 13px; margin-bottom: 6px;">Seconds per slide:</label>
+                  <input type="number" id="perSlideSec" name="perSlideSec" min="2" max="30" value="5">
+                </div>
+              </div>
+            </label>
+            
+            <label class="radio-option selected">
+              <input type="radio" name="timingMode" value="fixedRuntime" checked>
+              <div class="radio-option-content">
+                <span class="radio-option-label">Fixed Total Runtime</span>
+                <span class="radio-option-desc">Set the total video length in seconds (recommended)</span>
+                <div class="conditional-input" id="fixedRuntimeInput">
+                  <label for="fixedRuntimeSec" style="font-size: 13px; margin-bottom: 6px;">Total runtime (seconds):</label>
+                  <input type="number" id="fixedRuntimeSec" name="fixedRuntimeSec" min="30" max="1800" value="350">
+                </div>
+              </div>
+            </label>
+            
+            <label class="radio-option">
+              <input type="radio" name="timingMode" value="fitToSongs">
+              <div class="radio-option-content">
+                <span class="radio-option-label">Fit to Music Length</span>
+                <span class="radio-option-desc">Video duration matches your music (automatic)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SECTION 4: Transitions -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">🎨</span>
+          <span class="section-title">Transition Style</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="visualPackage">
+            Visual Package
+            <div class="help-text">Choose the style of transitions between slides</div>
+          </label>
+          <select id="visualPackage" name="visualPackage">
+            <option value="simple-fade-wipe">Simple Fade & Wipe</option>
+            <option value="pages-of-life">Pages of Life</option>
+            <option value="floating-frames">Floating Frames</option>
+            <option value="zoom-through">Zoom Through</option>
+            <option value="blinds-combs-bars">Blinds, Combs & Bars</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- SECTION 5: Music Distribution -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">🎼</span>
+          <span class="section-title">Music Distribution</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="musicDistribution">
+            How should songs be distributed?
+            <div class="help-text">Choose how your selected songs play throughout the video</div>
+          </label>
+          <select id="musicDistribution" name="musicDistribution">
+            <option value="evenlyDistributed">Evenly Distributed (Recommended)</option>
+            <option value="specifyPlacement">Specify Placement (Advanced)</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- SUBMIT SECTION -->
+      <div class="submit-section">
+        <button id="submitBtn" class="btn-submit" disabled>
+          🚀 Create My Memorial Video
+        </button>
+        <p class="submit-note">
+          You'll receive an email with your video in 5-15 minutes
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+  
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <div class="loading-text">Creating Your Video...</div>
+      <div class="loading-subtext">Please wait, this may take a few moments</div>
+    </div>
+  </div>
+  
+  <script>
+    // Configuration
+    const API_ENDPOINT = 'https://p273y4lw2j.execute-api.us-east-2.amazonaws.com/prod/process-job';
+    const S3_UPLOAD_API = 'https://4hyy6kr2id.execute-api.us-east-2.amazonaws.com/prod/generate-upload-url';
+    const MAX_SONGS = 6;
+    
+    // Song Library
+    const SONG_LIBRARY = [
+      {
+        id: 'lib-abandoned-house',
+        name: 'abandoned-house-115974.mp3',
+        displayName: 'Abandoned House',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/abandoned-house-115974.mp3'
+      },
+      {
+        id: 'lib-cathedral',
+        name: 'cathedral-164234.mp3',
+        displayName: 'Cathedral',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/cathedral-164234.mp3'
+      },
+      {
+        id: 'lib-eulogy',
+        name: 'eulogy-ambient-piano-music-for-furneral-exit-download-royalty-free-196437.mp3',
+        displayName: 'Eulogy - Ambient Piano',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/eulogy-ambient-piano-music-for-furneral-exit-download-royalty-free-196437.mp3'
+      },
+      {
+        id: 'lib-flowers',
+        name: 'flowers-of-sorrow-115981.mp3',
+        displayName: 'Flowers of Sorrow',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/flowers-of-sorrow-115981.mp3'
+      },
+      {
+        id: 'lib-funeral-memories',
+        name: 'funeral-memories-sad-asmr-piano-soft-farewell-334314.mp3',
+        displayName: 'Funeral Memories - Soft Farewell',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/funeral-memories-sad-asmr-piano-soft-farewell-334314.mp3'
+      },
+      {
+        id: 'lib-gentle-remembrance',
+        name: 'gentle-remembrance-359855.mp3',
+        displayName: 'Gentle Remembrance',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/gentle-remembrance-359855.mp3'
+      },
+      {
+        id: 'lib-sad-cinematic',
+        name: 'sad-cinematic-despair-mourning-tragic-music-340712.mp3',
+        displayName: 'Sad Cinematic - Mourning',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/sad-cinematic-despair-mourning-tragic-music-340712.mp3'
+      },
+      {
+        id: 'lib-shadows-towers',
+        name: 'shadows-of-the-wailing-towers-2-304723.mp3',
+        displayName: 'Shadows of the Wailing Towers',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/shadows-of-the-wailing-towers-2-304723.mp3'
+      },
+      {
+        id: 'lib-souls-silence',
+        name: 'souls-of-silence-369585.mp3',
+        displayName: 'Souls of Silence',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/souls-of-silence-369585.mp3'
+      },
+      {
+        id: 'lib-hands-loved',
+        name: 'the-hands-that-loved-me-301869.mp3',
+        displayName: 'The Hands That Loved Me',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/the-hands-that-loved-me-301869.mp3'
+      },
+      {
+        id: 'lib-voices-eternity',
+        name: 'voices-of-eternity-church-cathedral-choir-195196.mp3',
+        displayName: 'Voices of Eternity - Cathedral Choir',
+        url: 'https://order-by-age-uploads.s3.us-east-2.amazonaws.com/library-songs/voices-of-eternity-church-cathedral-choir-195196.mp3'
+      }
+    ];
+    
+    // Parse URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const uid = urlParams.get('uid');
+    const email = urlParams.get('email');
+    const firstName = urlParams.get('firstName') || 'there';
+    const fullName = urlParams.get('fullName') || '';
+    const slideshowUrl = urlParams.get('slideshowUrl') || '';
+    const dropboxUrl = urlParams.get('dropboxUrl') || '';
+    
+    // State
+    let selectedSongs = [];
+    let currentlyPlayingAudio = null;
+    
+    // Initialize
+    if (!uid || !email) {
+      showToast('Missing required parameters in URL', 'error');
+    } else {
+      initializePage();
+    }
+    
+    function initializePage() {
+      // Set up slideshow preview
+      setupSlideshowPreview();
+      
+      // Render song library
+      renderLibrary();
+      renderSongList();
+      updateSongCount();
+      
+      // Setup event listeners
+      setupEventListeners();
+      
+      // Validate form
+      validateForm();
+    }
+    
+    function setupSlideshowPreview() {
+      const iframe = document.getElementById('previewIframe');
+      const urlDisplay = document.getElementById('previewUrl');
+      
+      if (slideshowUrl) {
+        // Convert Google Slides URL to embed format
+        let embedUrl = slideshowUrl;
+        if (slideshowUrl.includes('docs.google.com/presentation')) {
+          embedUrl = slideshowUrl.replace('/edit', '/embed');
+        }
+        
+        iframe.src = embedUrl;
+        urlDisplay.textContent = `URL: ${slideshowUrl}`;
+      } else {
+        document.getElementById('slideshowPreview').style.display = 'none';
+      }
+    }
+    
+    function setupEventListeners() {
+      // Slideshow version radio buttons
+      document.querySelectorAll('input[name="slideshowVersion"]').forEach(radio => {
+        radio.addEventListener('change', handleSlideshowVersionChange);
+      });
+      
+      // Timing mode radio buttons
+      document.querySelectorAll('input[name="timingMode"]').forEach(radio => {
+        radio.addEventListener('change', handleTimingModeChange);
+      });
+      
+      // Custom song upload
+      document.getElementById('customSongUpload').addEventListener('change', handleCustomSongUpload);
+      
+      // Form changes
+      document.querySelectorAll('select, input').forEach(element => {
+        element.addEventListener('change', validateForm);
+        element.addEventListener('input', validateForm);
+      });
+      
+      // Submit button
+      document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+    }
+    
+    function handleSlideshowVersionChange(e) {
+      const value = e.target.value;
+      
+      // Update radio option selected class
+      document.querySelectorAll('.radio-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      e.target.closest('.radio-option').classList.add('selected');
+      
+      // Show/hide conditional inputs
+      document.getElementById('copyUrlInput').style.display = value === 'copy' ? 'block' : 'none';
+      document.getElementById('downloadInput').style.display = value === 'download' ? 'block' : 'none';
+      
+      validateForm();
+    }
+    
+    function handleTimingModeChange(e) {
+      const value = e.target.value;
+      
+      // Update radio option selected class
+      document.querySelectorAll('.radio-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      e.target.closest('.radio-option').classList.add('selected');
+      
+      // Show/hide conditional inputs
+      document.getElementById('perSlideInput').style.display = value === 'perSlide' ? 'block' : 'none';
+      document.getElementById('fixedRuntimeInput').style.display = value === 'fixedRuntime' ? 'block' : 'none';
+      
+      validateForm();
+    }
+    
+    function renderLibrary() {
+      const container = document.getElementById('libraryGrid');
+      
+      let html = '';
+      SONG_LIBRARY.forEach(song => {
+        const isAdded = selectedSongs.some(s => s.id === song.id);
+        const cardClass = isAdded ? 'library-song-card added' : 'library-song-card';
+        const btnClass = isAdded ? 'btn-add-library added' : 'btn-add-library';
+        const btnText = isAdded ? '✓ Added' : '+ Add';
+        const audioId = `audio-lib-${song.id}`;
+        
+        html += `
+          <div class="${cardClass}" data-song-id="${song.id}">
+            <div class="library-song-name">${song.displayName}</div>
+            <div class="library-song-controls">
+              <button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️</button>
+              <button class="${btnClass}" onclick="addLibrarySong('${song.id}')" ${isAdded || selectedSongs.length >= MAX_SONGS ? 'disabled' : ''}>
+                ${btnText}
+              </button>
+            </div>
+            <audio id="${audioId}" src="${song.url}" preload="none"></audio>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    function addLibrarySong(songId) {
+      if (selectedSongs.length >= MAX_SONGS) {
+        showToast(`Maximum ${MAX_SONGS} songs reached`, 'error');
+        return;
+      }
+      
+      const libSong = SONG_LIBRARY.find(s => s.id === songId);
+      if (!libSong) return;
+      
+      if (selectedSongs.some(s => s.id === songId)) {
+        showToast('Song already added', 'error');
+        return;
+      }
+      
+      selectedSongs.push({
+        id: libSong.id,
+        name: libSong.name,
+        displayName: libSong.displayName,
+        url: libSong.url,
+        isLibrary: true,
+        file: null
+      });
+      
+      renderLibrary();
+      renderSongList();
+      updateSongCount();
+      validateForm();
+      showToast(`Added "${libSong.displayName}"`, 'success');
+    }
+    
+    function renderSongList() {
+      const container = document.getElementById('songList');
+      
+      if (selectedSongs.length === 0) {
+        container.innerHTML = '<div style="color: #999; font-style: italic; padding: 20px; text-align: center;">No songs selected. Choose from the library above or upload your own!</div>';
+        return;
+      }
+      
+      let html = '';
+      selectedSongs.forEach((song, index) => {
+        const audioId = `audio-${song.id}`;
+        const badge = song.isLibrary ? '<span class="song-badge library">LIBRARY</span>' : '<span class="song-badge">CUSTOM</span>';
+        const itemClass = song.isLibrary ? 'song-item library-song' : 'song-item new-upload';
+        
+        html += `
+          <div class="${itemClass}">
+            <div class="song-info">
+              <div class="song-position">${index + 1}</div>
+              <span class="song-name">${song.displayName}</span>
+              ${badge}
+            </div>
+            <div class="song-controls">
+              ${song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️</button>` : ''}
+              <button class="btn-small btn-move" onclick="moveSongUp(${index})" ${index === 0 ? 'disabled' : ''}>⬆️</button>
+              <button class="btn-small btn-move" onclick="moveSongDown(${index})" ${index === selectedSongs.length - 1 ? 'disabled' : ''}>⬇️</button>
+              <button class="btn-small btn-danger" onclick="removeSong(${index})">🗑️</button>
+            </div>
+            ${song.url ? `<audio id="${audioId}" src="${song.url}" preload="none"></audio>` : ''}
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    function togglePlay(audioId, button) {
+      const audio = document.getElementById(audioId);
+      
+      if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
+        currentlyPlayingAudio.pause();
+        currentlyPlayingAudio.currentTime = 0;
+        document.querySelectorAll('.btn-play').forEach(btn => {
+          btn.textContent = '▶️';
+          btn.classList.remove('playing');
+        });
+      }
+      
+      if (audio.paused) {
+        audio.play();
+        button.textContent = '⏸️';
+        button.classList.add('playing');
+        currentlyPlayingAudio = audio;
+        
+        audio.onended = () => {
+          button.textContent = '▶️';
+          button.classList.remove('playing');
+          currentlyPlayingAudio = null;
+        };
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        button.textContent = '▶️';
+        button.classList.remove('playing');
+        currentlyPlayingAudio = null;
+      }
+    }
+    
+    function moveSongUp(index) {
+      if (index === 0) return;
+      const temp = selectedSongs[index];
+      selectedSongs[index] = selectedSongs[index - 1];
+      selectedSongs[index - 1] = temp;
+      renderSongList();
+    }
+    
+    function moveSongDown(index) {
+      if (index === selectedSongs.length - 1) return;
+      const temp = selectedSongs[index];
+      selectedSongs[index] = selectedSongs[index + 1];
+      selectedSongs[index + 1] = temp;
+      renderSongList();
+    }
+    
+    function removeSong(index) {
+      if (!confirm(`Remove "${selectedSongs[index].displayName}"?`)) return;
+      selectedSongs.splice(index, 1);
+      renderLibrary();
+      renderSongList();
+      updateSongCount();
+      validateForm();
+    }
+    
+    function updateSongCount() {
+      const display = document.getElementById('songCountDisplay');
+      const uploadSection = document.getElementById('uploadSection');
+      const uploadLabel = document.getElementById('uploadLabel');
+      
+      display.textContent = `${selectedSongs.length} of ${MAX_SONGS} songs`;
+      
+      if (selectedSongs.length >= MAX_SONGS) {
+        uploadSection.classList.add('max-reached');
+        uploadLabel.classList.add('disabled');
+      } else {
+        uploadSection.classList.remove('max-reached');
+        uploadLabel.classList.remove('disabled');
+      }
+    }
+    
+    function handleCustomSongUpload(e) {
+      const files = Array.from(e.target.files);
+      
+      files.forEach(file => {
+        if (selectedSongs.length >= MAX_SONGS) {
+          showToast(`Maximum ${MAX_SONGS} songs reached`, 'error');
+          return;
+        }
+        
+        if (!file.type.includes('audio/mpeg') && !file.name.endsWith('.mp3')) {
+          showToast(`${file.name} is not an MP3 file`, 'error');
+          return;
+        }
+        
+        const localUrl = URL.createObjectURL(file);
+        
+        selectedSongs.push({
+          id: `custom-${Date.now()}-${Math.random()}`,
+          name: file.name,
+          displayName: file.name,
+          url: localUrl,
+          isLibrary: false,
+          file: file
+        });
+      });
+      
+      renderSongList();
+      updateSongCount();
+      validateForm();
+      
+      e.target.value = '';
+    }
+    
+    function validateForm() {
+      const slideshowVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+      const submitBtn = document.getElementById('submitBtn');
+      
+      let isValid = true;
+      
+      // Check slideshow
+      if (slideshowVersion === 'copy') {
+        const newUrl = document.getElementById('newGoogleSlidesUrl').value;
+        if (!newUrl || !newUrl.includes('docs.google.com/presentation')) {
+          isValid = false;
+        }
+      } else if (slideshowVersion === 'download') {
+        const pptxFile = document.getElementById('pptxFile').files[0];
+        const pptxUrl = document.getElementById('pptxUrl').value;
+        if (!pptxFile && !pptxUrl) {
+          isValid = false;
+        }
+      }
+      
+      // Check songs
+      if (selectedSongs.length === 0) {
+        isValid = false;
+      }
+      
+      submitBtn.disabled = !isValid;
+    }
+    
+    async function handleSubmit() {
+      try {
+        showLoading(true);
+        
+        // STEP 1: Determine presentation type and source
+        const slideshowVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+        let presentationType = null;
+        let presentationSource = null;
+        
+        if (slideshowVersion === 'original') {
+          if (slideshowUrl.includes('docs.google.com/presentation')) {
+            presentationType = 'google_slides';
+            presentationSource = slideshowUrl;
+          }
+        } else if (slideshowVersion === 'copy') {
+          const newUrl = document.getElementById('newGoogleSlidesUrl').value;
+          presentationType = 'google_slides';
+          presentationSource = newUrl;
+        } else if (slideshowVersion === 'download') {
+          const pptxFile = document.getElementById('pptxFile').files[0];
+          const pptxUrl = document.getElementById('pptxUrl').value;
+          
+          if (pptxFile) {
+            // Upload file to S3
+            showToast('Uploading presentation...', 'success');
+            const uploadedUrl = await uploadFileToS3(pptxFile, 'presentation');
+            presentationType = 'powerpoint_file';
+            presentationSource = uploadedUrl;
+          } else if (pptxUrl) {
+            presentationType = 'powerpoint_url';
+            presentationSource = pptxUrl;
+          }
+        }
+        
+        if (!presentationType || !presentationSource) {
+          throw new Error('Could not determine presentation type');
+        }
+        
+        // STEP 2: Upload custom songs to S3 and collect all song URLs
+        showToast('Uploading songs...', 'success');
+        const songs = [];
+        
+        for (let i = 0; i < selectedSongs.length; i++) {
+          const song = selectedSongs[i];
+          
+          if (song.isLibrary) {
+            // Library song - use direct URL
+            songs.push(song.url);
+          } else if (song.file) {
+            // Custom song - upload to S3
+            const uploadedUrl = await uploadFileToS3(song.file, 'song', i + 1);
+            songs.push(uploadedUrl);
+          }
+        }
+        
+        if (songs.length === 0) {
+          throw new Error('No songs to process');
+        }
+        
+        // STEP 3: Build settings
+        const timingMode = document.querySelector('input[name="timingMode"]:checked').value;
+        const settings = {
+          jobId: uid,
+          customerEmail: email,
+          timingMode: timingMode,
+          visualPackage: document.getElementById('visualPackage').value,
+          audioCount: songs.length,
+          minPerSlideSec: 2,
+          maxPerSlideSec: 12,
+          targetLufs: -16,
+          fadeInSec: 2,
+          fadeOutSec: 2,
+          musicDistribution: document.getElementById('musicDistribution').value,
+          audioMatchPolicy: 'fitTo'
+        };
+        
+        if (timingMode === 'fixedRuntime') {
+          settings.fixedRuntimeSec = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+        } else if (timingMode === 'perSlide') {
+          settings.perSlideSec = parseInt(document.getElementById('perSlideSec').value) || 5;
+        }
+        
+        // STEP 4: Build final payload
+        const payload = {
+          jobId: uid,
+          presentationType: presentationType,
+          presentationSource: presentationSource,
+          songs: songs,
+          settings: settings
+        };
+        
+        console.log('[SUBMIT] Payload:', JSON.stringify(payload, null, 2));
+        
+        // STEP 5: Submit to API
+        showToast('Creating video...', 'success');
+        const response = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || errorData.message || `HTTP ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('[SUBMIT] Success:', result);
+        
+        showLoading(false);
+        
+        // Show success message
+        alert('✅ Your memorial video is being created!\n\nYou will receive an email in 5-15 minutes with your video and a link to make any edits.');
+        
+        // Disable submit button
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').textContent = '✅ Submitted Successfully';
+        
+      } catch (error) {
+        console.error('[SUBMIT ERROR]', error);
+        showLoading(false);
+        showToast('Failed to submit: ' + error.message, 'error');
+      }
+    }
+    
+    async function uploadFileToS3(file, fileType, fileNumber = null) {
+      try {
+        // Get presigned URL from your API
+        const urlResponse = await fetch(S3_UPLOAD_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            jobId: uid,
+            fileType: fileType,
+            fileNumber: fileNumber,
+            fileExtension: file.name.split('.').pop()
+          })
+        });
+        
+        if (!urlResponse.ok) {
+          throw new Error('Failed to get upload URL');
+        }
+        
+        const { uploadUrl, s3Url } = await urlResponse.json();
+        
+        // Upload file to S3
+        const uploadResponse = await fetch(uploadUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': file.type
+          },
+          body: file
+        });
+        
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload file');
+        }
+        
+        return s3Url;
+      } catch (error) {
+        console.error('[UPLOAD ERROR]', error);
+        throw new Error(`Failed to upload ${fileType}: ${error.message}`);
+      }
+    }
+    
+    function showLoading(show) {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.toggle('show', show);
+    }
+    
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
