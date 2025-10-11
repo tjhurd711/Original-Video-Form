@@ -1129,11 +1129,25 @@
       const previewHeader = document.getElementById('previewHeader');
       
       if (url && url.includes('docs.google.com/presentation')) {
+        // Google Slides
         const embedUrl = url.replace('/edit', '/embed');
         previewHeader.textContent = '🔍 Preview: Your Copy';
         iframe.src = embedUrl;
         urlDisplay.textContent = `URL: ${url}`;
         slideshowPreview.style.display = 'block';
+      } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
+        // PowerPoint URL - use SharePoint native embed
+        let embedUrl = url;
+        if (!url.includes('action=embedview')) {
+          const separator = url.includes('?') ? '&' : '?';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
+        }
+        previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
+        iframe.src = embedUrl;
+        urlDisplay.textContent = `URL: ${url}`;
+        slideshowPreview.style.display = 'block';
+        
+        console.log('[PREVIEW] Copy PowerPoint embed URL:', embedUrl);
       } else {
         slideshowPreview.style.display = 'none';
       }
