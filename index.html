@@ -1055,6 +1055,12 @@
         element.addEventListener('change', validateForm);
         element.addEventListener('input', validateForm);
       });
+
+      // Music distribution change handler
+      document.getElementById('musicDistribution').addEventListener('change', (e) => {
+        const value = e.target.value;
+        handleMusicDistributionChange(value);
+      });
       
       // Submit button
       document.getElementById('submitBtn').addEventListener('click', handleSubmit);
@@ -1252,6 +1258,7 @@
       renderLibrary();
       renderSongList();
       updateSongCount();
+      updateSongRangeSliders();
       validateForm();
       showToast(`Added "${libSong.displayName}"`, 'success');
     }
@@ -1329,6 +1336,7 @@
       selectedSongs[index] = selectedSongs[index - 1];
       selectedSongs[index - 1] = temp;
       renderSongList();
+      updateSongRangeSliders();
     }
     
     function moveSongDown(index) {
@@ -1337,6 +1345,7 @@
       selectedSongs[index] = selectedSongs[index + 1];
       selectedSongs[index + 1] = temp;
       renderSongList();
+      updateSongRangeSliders();
     }
     
     function removeSong(index) {
@@ -1345,6 +1354,7 @@
       renderLibrary();
       renderSongList();
       updateSongCount();
+      updateSongRangeSliders();
       validateForm();
     }
     
@@ -1392,6 +1402,7 @@
       
       renderSongList();
       updateSongCount();
+      updateSongRangeSliders();
       validateForm();
       
       e.target.value = '';
@@ -1423,6 +1434,108 @@
       }
       
       submitBtn.disabled = !isValid;
+    }
+
+    // Handle music distribution change
+    function handleMusicDistributionChange(value) {
+      const container = document.getElementById('songRangesContainer');
+      
+      if (value === 'specifyPlacement') {
+        container.style.display = 'block';
+        setupSongRangeSliders();
+      } else {
+        container.style.display = 'none';
+      }
+    }
+    
+    // Setup song range sliders
+    function setupSongRangeSliders() {
+      const container = document.getElementById('songRangesList');
+      
+      if (selectedSongs.length === 0) {
+        container.innerHTML = '<div style="color: #999; font-style: italic;">No songs available. Add songs first.</div>';
+        return;
+      }
+      
+      let html = '';
+      selectedSongs.forEach((song, index) => {
+        const audioId = `audio-range-${song.id}`;
+        const playButton = song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)" style="margin-left: 8px;">▶️</button>` : '';
+        
+        html += `
+          <div class="song-range-item">
+            <div class="song-range-header">
+              🎵 ${song.displayName}
+              ${playButton}
+              ${song.url ? `<audio id="${audioId}" src="${song.url}" preload="none"></audio>` : ''}
+            </div>
+            <div class="slide-inputs">
+              <div class="slide-input-group">
+                <label>Start Slide</label>
+                <input type="number" 
+                       id="songRange${index}Start" 
+                       class="song-range-input"
+                       data-song-index="${index}"
+                       data-type="start"
+                       min="1" 
+                       max="250" 
+                       placeholder="e.g., 1">
+              </div>
+              <div class="slide-input-group">
+                <label>End Slide</label>
+                <input type="number" 
+                       id="songRange${index}End" 
+                       class="song-range-input"
+                       data-song-index="${index}"
+                       data-type="end"
+                       min="1" 
+                       max="250" 
+                       placeholder="e.g., 50">
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      container.innerHTML = html;
+      
+      // Add event listeners to all range inputs
+      document.querySelectorAll('.song-range-input').forEach(input => {
+        input.addEventListener('input', handleSongRangeChange);
+      });
+    }
+    
+    // Handle song range input changes
+    function handleSongRangeChange() {
+      const songRanges = [];
+      
+      selectedSongs.forEach((song, index) => {
+        const startInput = document.getElementById(`songRange${index}Start`);
+        const endInput = document.getElementById(`songRange${index}End`);
+        
+        if (startInput && endInput) {
+          const startVal = parseInt(startInput.value);
+          const endVal = parseInt(endInput.value);
+          
+          if (!isNaN(startVal) && !isNaN(endVal)) {
+            songRanges.push({
+              song: song.name,
+              startSlide: startVal,
+              endSlide: endVal
+            });
+          }
+        }
+      });
+      
+      console.log('[SONG RANGES]', songRanges);
+    }
+
+    // Update song range sliders when song count changes
+    function updateSongRangeSliders() {
+      const musicDist = document.getElementById('musicDistribution').value;
+      if (musicDist === 'specifyPlacement') {
+        setupSongRangeSliders();
+      }
     }
     
     async function handleSubmit() {
