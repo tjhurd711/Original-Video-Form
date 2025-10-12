@@ -1574,30 +1574,42 @@
       try {
         console.log(`[UPLOAD] Starting upload for ${file.name} (${fileType})`);
         
-        // Get presigned URL from your API
+        // Get presigned URL from API
+        const payload = {
+          jobId: uid,
+          fileType: fileType,
+          fileExtension: file.name.split('.').pop()
+        };
+        
+        if (fileNumber !== null) {
+          payload.fileNumber = fileNumber;
+        }
+        
+        console.log(`[UPLOAD] Requesting presigned URL with payload:`, payload);
+        
         const urlResponse = await fetch(S3_UPLOAD_API, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jobId: uid,
-            fileType: fileType,
-            fileNumber: fileNumber,
-            fileExtension: file.name.split('.').pop()
-          })
+          body: JSON.stringify(payload)
         });
         
         if (!urlResponse.ok) {
           const errorText = await urlResponse.text();
+          console.error(`[UPLOAD ERROR] Failed to get presigned URL: ${urlResponse.status} - ${errorText}`);
           throw new Error(`Failed to get upload URL: ${urlResponse.status} - ${errorText}`);
         }
         
-        const { uploadUrl, s3Url } = await urlResponse.json();
+        const responseData = await urlResponse.json();
+        console.log(`[UPLOAD] Presigned URL response:`, responseData);
         
-        if (!uploadUrl || !s3Url) {
-          throw new Error('Invalid response from upload API - missing URLs');
+        const uploadUrl = responseData.uploadUrl;
+        const s3Url = responseData.s3Url || responseData.s3Key;  // Try both fields
+        
+        if (!uploadUrl) {
+          throw new Error('No uploadUrl in API response');
         }
         
-        console.log(`[UPLOAD] Got presigned URL for ${file.name}`);
+        console.log(`[UPLOAD] Got presigned URL, uploading to S3...`);
         
         // Upload file to S3
         const uploadResponse = await fetch(uploadUrl, {
@@ -1609,6 +1621,7 @@
         });
         
         if (!uploadResponse.ok) {
+          console.error(`[UPLOAD ERROR] S3 upload failed: ${uploadResponse.status}`);
           throw new Error(`S3 upload failed: ${uploadResponse.status}`);
         }
         
@@ -1618,7 +1631,7 @@
         return s3Url;
       } catch (error) {
         console.error(`[UPLOAD ERROR] Failed to upload ${file.name}:`, error);
-        throw new Error(`Upload failed for ${file.name}: ${error.message}`);
+        throw error;
       }
     }
     
