@@ -1579,27 +1579,38 @@
     // Handle song range input changes
     function handleSongRangeChange() {
       songRanges = [];
-      
+  
       selectedSongs.forEach((song, index) => {
         const startInput = document.getElementById(`songRange${index}Start`);
         const endInput = document.getElementById(`songRange${index}End`);
-        
+    
         if (startInput && endInput) {
           const startVal = parseInt(startInput.value);
           const endVal = parseInt(endInput.value);
-          
+      
           if (!isNaN(startVal) && !isNaN(endVal)) {
+            // FIX: For uploaded songs, extract just the filename from the S3 URL
+            // For library songs, use the original name
+            let songIdentifier = song.name;
+        
+            if (!song.isLibrary && song.url && song.url.includes('/temp-uploads/')) {
+              // Extract filename from temp upload URL
+              // e.g., "https://.../temp-uploads/10321/song2.mp3" -> "song2.mp3"
+              songIdentifier = song.url.split('/').pop();
+              console.log(`[SONG RANGE] Mapped uploaded song: ${song.name} -> ${songIdentifier}`);
+            }
+        
             songRanges.push({
               song: songIdentifier,
               startSlide: startVal,
               endSlide: endVal
             });
-          }
-        }
-      });
-      
-      console.log('[SONG RANGES]', songRanges);
-    }
+         }
+      }
+    });
+  
+    console.log('[SONG RANGES]', songRanges);
+  }
 
     // Update song range sliders when song count changes
     function updateSongRangeSliders() {
