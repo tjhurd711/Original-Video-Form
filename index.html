@@ -1438,6 +1438,11 @@
           if (slideshowUrl.includes('docs.google.com/presentation')) {
             presentationType = 'google_slides';
             presentationSource = slideshowUrl;
+          } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
+            presentationType = 'powerpoint_url';
+            presentationSource = slideshowUrl;
+          } else {
+            throw new Error('Could not determine presentation type from original URL');
           }
         } else if (slideshowVersion === 'copy') {
           const newUrl = document.getElementById('newGoogleSlidesUrl').value;
