@@ -1603,7 +1603,7 @@
         console.log(`[UPLOAD] Presigned URL response:`, responseData);
         
         const uploadUrl = responseData.uploadUrl;
-        const s3Url = responseData.s3Url || responseData.s3Key;  // Try both fields
+        let s3Url = responseData.s3Url || responseData.s3Key;
         
         if (!uploadUrl) {
           throw new Error('No uploadUrl in API response');
@@ -1623,6 +1623,12 @@
         if (!uploadResponse.ok) {
           console.error(`[UPLOAD ERROR] S3 upload failed: ${uploadResponse.status}`);
           throw new Error(`S3 upload failed: ${uploadResponse.status}`);
+        }
+        
+        // Convert S3 key to full URL if needed
+        if (s3Url && !s3Url.startsWith('http')) {
+          s3Url = `https://order-by-age-uploads.s3.us-east-2.amazonaws.com/${s3Url}`;
+          console.log(`[UPLOAD] Converted S3 key to full URL: ${s3Url}`);
         }
         
         console.log(`[UPLOAD] Successfully uploaded ${file.name} to S3`);
