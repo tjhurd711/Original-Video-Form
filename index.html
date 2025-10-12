@@ -1480,14 +1480,27 @@
             songs.push(song.url);
           } else if (song.file) {
             // Custom song - upload to S3
-            const uploadedUrl = await uploadFileToS3(song.file, 'song', i + 1);
-            songs.push(uploadedUrl);
+            try {
+              const uploadedUrl = await uploadFileToS3(song.file, 'song', i + 1);
+              if (uploadedUrl) {
+                songs.push(uploadedUrl);
+              } else {
+                throw new Error(`Failed to upload ${song.name} - no URL returned`);
+              }
+            } catch (error) {
+              console.error(`[UPLOAD ERROR] Failed to upload song ${song.name}:`, error);
+              showToast(`Failed to upload ${song.name}: ${error.message}`, 'error');
+              throw new Error(`Song upload failed: ${song.name}`);
+            }
           }
         }
         
         if (songs.length === 0) {
           throw new Error('No songs to process');
         }
+        
+        console.log(`[SONGS] Successfully prepared ${songs.length} songs`);
+        console.log('[SONGS] URLs:', songs);
         
         // STEP 3: Build settings
         const timingMode = document.querySelector('input[name="timingMode"]:checked').value;
@@ -1559,6 +1572,8 @@
     
     async function uploadFileToS3(file, fileType, fileNumber = null) {
       try {
+        console.log(`[UPLOAD] Starting upload for ${file.name} (${fileType})`);
+        
         // Get presigned URL from your API
         const urlResponse = await fetch(S3_UPLOAD_API, {
           method: 'POST',
@@ -1572,10 +1587,17 @@
         });
         
         if (!urlResponse.ok) {
-          throw new Error('Failed to get upload URL');
+          const errorText = await urlResponse.text();
+          throw new Error(`Failed to get upload URL: ${urlResponse.status} - ${errorText}`);
         }
         
         const { uploadUrl, s3Url } = await urlResponse.json();
+        
+        if (!uploadUrl || !s3Url) {
+          throw new Error('Invalid response from upload API - missing URLs');
+        }
+        
+        console.log(`[UPLOAD] Got presigned URL for ${file.name}`);
         
         // Upload file to S3
         const uploadResponse = await fetch(uploadUrl, {
@@ -1587,13 +1609,16 @@
         });
         
         if (!uploadResponse.ok) {
-          throw new Error('Failed to upload file');
+          throw new Error(`S3 upload failed: ${uploadResponse.status}`);
         }
+        
+        console.log(`[UPLOAD] Successfully uploaded ${file.name} to S3`);
+        console.log(`[UPLOAD] S3 URL: ${s3Url}`);
         
         return s3Url;
       } catch (error) {
-        console.error('[UPLOAD ERROR]', error);
-        throw new Error(`Failed to upload ${fileType}: ${error.message}`);
+        console.error(`[UPLOAD ERROR] Failed to upload ${file.name}:`, error);
+        throw new Error(`Upload failed for ${file.name}: ${error.message}`);
       }
     }
     
