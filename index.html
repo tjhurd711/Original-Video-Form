@@ -1019,6 +1019,7 @@
     // State
     let selectedSongs = [];
     let currentlyPlayingAudio = null;
+    let songRanges = [];
     
     // Initialize
     if (!uid || !email) {
@@ -1577,7 +1578,7 @@
     
     // Handle song range input changes
     function handleSongRangeChange() {
-      const songRanges = [];
+      songRanges = [];
       
       selectedSongs.forEach((song, index) => {
         const startInput = document.getElementById(`songRange${index}Start`);
@@ -1706,6 +1707,12 @@
           settings.fixedRuntimeSec = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
         } else if (timingMode === 'perSlide') {
           settings.perSlideSec = parseInt(document.getElementById('perSlideSec').value) || 5;
+        }
+
+        // ADD SONG RANGES IF SPECIFY PLACEMENT IS SELECTED
+        if (settings.musicDistribution === 'specifyPlacement' && songRanges.length > 0) {
+          settings.songRanges = songRanges;
+          console.log('[SUBMIT] Including songRanges:', songRanges);
         }
         
         // STEP 4: Build final payload
