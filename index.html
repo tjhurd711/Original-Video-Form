@@ -1589,17 +1589,14 @@
           const endVal = parseInt(endInput.value);
       
           if (!isNaN(startVal) && !isNaN(endVal)) {
-            // FIX: For uploaded songs, extract filename from S3 URL
-            // For library songs, use the original name
-            let songIdentifier = song.name;
+            let songIdentifier;
         
-            if (!song.isLibrary && song.url && song.url.startsWith('blob:')) {
-              // New upload with blob URL - use the original filename
+            if (song.isLibrary) {
+              // Library: use actual filename
               songIdentifier = song.name;
-            } else if (!song.isLibrary && song.url && song.url.includes('/temp-uploads/')) {
-              // Previously uploaded song - extract filename from S3 URL
-              songIdentifier = song.url.split('/').pop();
-              console.log(`[SONG RANGE] Mapped uploaded song: ${song.name} -> ${songIdentifier}`);
+            } else {
+              // Custom: use position-based name (matches backend upload order)
+              songIdentifier = `song${index + 1}.mp3`;
             }
         
             songRanges.push({
