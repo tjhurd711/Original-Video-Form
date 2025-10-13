@@ -1522,75 +1522,94 @@
     // Setup song range sliders
     function setupSongRangeSliders() {
       const container = document.getElementById('songRangesList');
-      
+  
       if (selectedSongs.length === 0) {
         container.innerHTML = '<div style="color: #999; font-style: italic;">No songs available. Add songs first.</div>';
         return;
       }
-      
+  
       let html = '';
       selectedSongs.forEach((song, index) => {
         const audioId = `audio-range-${song.id}`;
         const playButton = song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)" style="margin-left: 8px;">▶️</button>` : '';
-        
+    
+        // Auto-populate start value: first song starts at 1, others start at previous end + 1
+        const startValue = index === 0 ? '1' : '';
+    
         html += `
           <div class="song-range-item">
-            <div class="song-range-header">
-              🎵 ${song.displayName}
-              ${playButton}
-              ${song.url ? `<audio id="${audioId}" src="${song.url}" preload="none"></audio>` : ''}
-            </div>
-            <div class="slide-inputs">
-              <div class="slide-input-group">
-                <label>Start Slide</label>
-                <input type="number" 
-                       id="songRange${index}Start" 
-                       class="song-range-input"
-                       data-song-index="${index}"
-                       data-type="start"
-                       min="1" 
-                       max="250" 
-                       placeholder="e.g., 1">
-              </div>
-              <div class="slide-input-group">
-                <label>End Slide</label>
-                <input type="number" 
-                       id="songRange${index}End" 
-                       class="song-range-input"
-                       data-song-index="${index}"
-                       data-type="end"
-                       min="1" 
-                       max="250" 
-                       placeholder="e.g., 50">
-              </div>
-            </div>
+          <div class="song-range-header">
+            🎵 ${song.displayName}
+            ${playButton}
+            ${song.url ? `<audio id="${audioId}" src="${song.url}" preload="none"></audio>` : ''}
           </div>
-        `;
-      });
-      
-      container.innerHTML = html;
-      
-      // Add event listeners to all range inputs
-      document.querySelectorAll('.song-range-input').forEach(input => {
-        input.addEventListener('input', handleSongRangeChange);
-      });
-    }
+          <div class="slide-inputs">
+            <div class="slide-input-group">
+              <label>Start Slide</label>
+              <input type="number" 
+                     id="songRange${index}Start" 
+                     class="song-range-input"
+                     data-song-index="${index}"
+                     data-type="start"
+                     min="1" 
+                     max="250" 
+                     value="${startValue}"
+                     placeholder="e.g., 1">
+            </div>
+            <div class="slide-input-group">
+              <label>End Slide</label>
+              <input type="number" 
+                     id="songRange${index}End" 
+                     class="song-range-input"
+                     data-song-index="${index}"
+                     data-type="end"
+                     min="1" 
+                     max="250" 
+                    placeholder="e.g., 50">
+           </div>
+          </div>
+        </div>
+      `;
+    });
+  
+    container.innerHTML = html;
+  
+    // Add event listeners to all range inputs
+    document.querySelectorAll('.song-range-input').forEach(input => {
+      input.addEventListener('input', handleSongRangeChange);
+    });
+  }
     
     // Handle song range input changes
-    function handleSongRangeChange() {
+    function handleSongRangeChange(e) {
+      const changedIndex = parseInt(e.target.dataset.songIndex);
+      const changedType = e.target.dataset.type;
+  
+      // If an "End Slide" changed, update the next song's start slide
+      if (changedType === 'end' && changedIndex < selectedSongs.length - 1) {
+        const endValue = parseInt(e.target.value);
+        if (!isNaN(endValue)) {
+          const nextStartInput = document.getElementById(`songRange${changedIndex + 1}Start`);
+          if (nextStartInput) {
+            nextStartInput.value = endValue + 1;
+          }
+        }
+      }
+  
+      // Rebuild songRanges array
       songRanges = [];
 
       selectedSongs.forEach((song, index) => {
         const startInput = document.getElementById(`songRange${index}Start`);
         const endInput = document.getElementById(`songRange${index}End`);
-    
+
         if (startInput && endInput) {
           const startVal = parseInt(startInput.value);
           const endVal = parseInt(endInput.value);
-      
+  
           if (!isNaN(startVal) && !isNaN(endVal)) {
             let songIdentifier;
-        
+    
             if (song.isLibrary) {
               // Library: use actual filename
               songIdentifier = song.name;
@@ -1598,7 +1617,7 @@
               // Custom: use position-based name (matches backend upload order)
               songIdentifier = `song${index + 1}.mp3`;
             }
-        
+    
             songRanges.push({
               song: songIdentifier,
               startSlide: startVal,
@@ -1610,7 +1629,6 @@
 
     console.log('[SONG RANGES]', songRanges);
   }
-
     // Update song range sliders when song count changes
     function updateSongRangeSliders() {
       const musicDist = document.getElementById('musicDistribution').value;
