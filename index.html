@@ -1680,7 +1680,14 @@
         }
     
         const avgPerSlide = Math.round(totalSeconds / slideCount);
-        detailsText = `${selectedSongs.length} songs (≈${avgPerSlide}s per slide)`;
+        const songWord = selectedSongs.length === 1 ? 'song' : 'songs';
+  
+        // Format time for display in the message
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  
+        detailsText = `Video will be ${timeDisplay} long based on ${selectedSongs.length} selected ${songWord} at ${avgPerSlide} seconds per slide (beginning and end slide at ${avgPerSlide * 2}s)`;
       } 
   
       // Format as MM:SS
