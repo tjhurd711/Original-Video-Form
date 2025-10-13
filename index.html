@@ -825,6 +825,15 @@
           <span class="section-icon">⏱️</span>
           <span class="section-title">Video Timing</span>
         </div>
+
+        <!-- NEW INPUT ADDED HERE -->
+        <div class="form-group">
+          <label for="slideCount">
+            Number of Slides in Your Presentation
+            <div class="help-text">Total number of slides (first and last slides display 2x longer)</div>
+          </label>
+          <input type="number" id="slideCount" name="slideCount" min="2" max="250" value="" placeholder="e.g., 50">
+        </div>
         
         <div class="form-group">
           <label>How should we time your video?</label>
@@ -863,6 +872,21 @@
           </div>
         </div>
       </div>
+
+      <!-- Duration Display -->
+      <div id="durationDisplay" class="preview-section" style="display:none; background: #e8f5e9; border-color: #4CAF50; margin-top: 20px;">
+        <div class="preview-header" style="color: #2e7d32;">
+         ⏱️ Estimated Video Duration
+       </div>
+       <div style="padding: 15px; background: white; border-radius: 8px;">
+         <div style="font-size: 32px; font-weight: 700; color: #4CAF50; text-align: center;" id="durationValue">
+           --:--
+         </div>
+         <div style="font-size: 14px; color: #666; text-align: center; margin-top: 8px;" id="durationDetails">
+           Enter slide count to calculate
+         </div>
+       </div>
+     </div>
       
       <!-- SECTION 4: Transitions -->
       <div class="section">
@@ -1286,6 +1310,11 @@
         const value = e.target.value;
         handleMusicDistributionChange(value);
       });
+
+      // Duration calculator triggers
+      document.getElementById('slideCount').addEventListener('input', calculateVideoDuration);
+      document.getElementById('perSlideSec').addEventListener('input', calculateVideoDuration);
+      document.getElementById('fixedRuntimeSec').addEventListener('input', calculateVideoDuration);
       
       // Submit button
       document.getElementById('submitBtn').addEventListener('click', handleSubmit);
@@ -1425,7 +1454,8 @@
       // Show/hide conditional inputs
       document.getElementById('perSlideInput').style.display = value === 'perSlide' ? 'block' : 'none';
       document.getElementById('fixedRuntimeInput').style.display = value === 'fixedRuntime' ? 'block' : 'none';
-      
+
+      calculateVideoDuration();
       validateForm();
     }
     
@@ -1488,6 +1518,7 @@
       renderSongList();
       updateSongCount();
       updateSongRangeSliders();
+      calculateVideoDuration();
       validateForm();
       showToast(`Added "${libSong.displayName}"`, 'success');
     }
@@ -1566,6 +1597,7 @@
       selectedSongs[index - 1] = temp;
       renderSongList();
       updateSongRangeSliders();
+      calculateVideoDuration();
     }
     
     function moveSongDown(index) {
@@ -1575,6 +1607,7 @@
       selectedSongs[index + 1] = temp;
       renderSongList();
       updateSongRangeSliders();
+      calculateVideoDuration();
     }
     
     function removeSong(index) {
@@ -1584,6 +1617,7 @@
       renderSongList();
       updateSongCount();
       updateSongRangeSliders();
+      calculateVideoDuration();
       validateForm();
     }
     
@@ -1602,41 +1636,111 @@
         uploadLabel.classList.remove('disabled');
       }
     }
+
+    function calculateVideoDuration() {
+      const slideCountInput = document.getElementById('slideCount');
+      const slideCount = parseInt(slideCountInput.value);
+      const timingMode = document.querySelector('input[name="timingMode"]:checked')?.value;
+  
+      const displayDiv = document.getElementById('durationDisplay');
+      const valueDiv = document.getElementById('durationValue');
+      const detailsDiv = document.getElementById('durationDetails');
+  
+      // Hide if no slide count
+      if (!slideCount || slideCount < 2) {
+        displayDiv.style.display = 'none';
+        return;
+      }
+  
+      let totalSeconds = 0;
+      let detailsText = '';
+  
+      if (timingMode === 'perSlide') {
+        const perSlideSec = parseInt(document.getElementById('perSlideSec').value) || 5;
+        // (slideCount - 2) normal slides + 2 slides at 2x duration
+        totalSeconds = (slideCount - 2) * perSlideSec + (2 * perSlideSec * 2);
+        detailsText = `${slideCount} slides × ${perSlideSec}s each (first & last 2x)`;
+    
+      } else if (timingMode === 'fixedRuntime') {
+        totalSeconds = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+        const avgPerSlide = Math.round(totalSeconds / slideCount);
+        detailsText = `Fixed runtime (≈${avgPerSlide}s per slide)`;
+    
+      } else if (timingMode === 'fitToSongs') {
+        // Sum all song durations
+        totalSeconds = selectedSongs.reduce((sum, song) => {
+          return sum + (song.duration || 0);
+        }, 0);
+    
+        if (totalSeconds === 0) {
+          detailsText = 'Add songs to calculate duration';
+          displayDiv.style.display = 'none';
+          return;
+        }
+    
+        const avgPerSlide = Math.round(totalSeconds / slideCount);
+        detailsText = `${selectedSongs.length} songs (≈${avgPerSlide}s per slide)`;
+      } 
+  
+      // Format as MM:SS
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  
+      valueDiv.textContent = formattedTime;
+      detailsDiv.textContent = detailsText;
+      displayDiv.style.display = 'block';
+    }
     
     function handleCustomSongUpload(e) {
       const files = Array.from(e.target.files);
-      
+  
       files.forEach(file => {
         if (selectedSongs.length >= MAX_SONGS) {
           showToast(`Maximum ${MAX_SONGS} songs reached`, 'error');
           return;
         }
-        
+    
         if (!file.type.includes('audio/mpeg') && !file.name.endsWith('.mp3')) {
           showToast(`${file.name} is not an MP3 file`, 'error');
           return;
         }
-        
+    
         const localUrl = URL.createObjectURL(file);
-        
+    
+        // Create audio element to get duration
+        const audio = new Audio(localUrl);
+        audio.addEventListener('loadedmetadata', () => {
+          const duration = Math.round(audio.duration);
+      
+          // Find the song in selectedSongs and update its duration
+          const song = selectedSongs.find(s => s.url === localUrl);
+          if (song) {
+            song.duration = duration;
+            console.log(`[DURATION] ${file.name}: ${duration}s`);
+            calculateVideoDuration(); // Recalculate after getting duration
+          }
+        });
+    
         selectedSongs.push({
           id: `custom-${Date.now()}-${Math.random()}`,
           name: file.name,
           displayName: file.name,
           url: localUrl,
           isLibrary: false,
-          file: file
+          file: file,
+          duration: null // Will be set when metadata loads
         });
       });
-      
+  
       renderSongList();
       updateSongCount();
       updateSongRangeSliders();
+      calculateVideoDuration();
       validateForm();
-      
+  
       e.target.value = '';
     }
-
     // Genre selector change event listener
     document.getElementById('genreSelect').addEventListener('change', () => {
       renderLibrary();
