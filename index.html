@@ -1579,7 +1579,7 @@
     // Handle song range input changes
     function handleSongRangeChange() {
       songRanges = [];
-  
+
       selectedSongs.forEach((song, index) => {
         const startInput = document.getElementById(`songRange${index}Start`);
         const endInput = document.getElementById(`songRange${index}End`);
@@ -1589,13 +1589,15 @@
           const endVal = parseInt(endInput.value);
       
           if (!isNaN(startVal) && !isNaN(endVal)) {
-            // FIX: For uploaded songs, extract just the filename from the S3 URL
+            // FIX: For uploaded songs, extract filename from S3 URL
             // For library songs, use the original name
             let songIdentifier = song.name;
         
-            if (!song.isLibrary && song.url && song.url.includes('/temp-uploads/')) {
-              // Extract filename from temp upload URL
-              // e.g., "https://.../temp-uploads/10321/song2.mp3" -> "song2.mp3"
+            if (!song.isLibrary && song.url && song.url.startsWith('blob:')) {
+              // New upload with blob URL - use the original filename
+              songIdentifier = song.name;
+            } else if (!song.isLibrary && song.url && song.url.includes('/temp-uploads/')) {
+              // Previously uploaded song - extract filename from S3 URL
               songIdentifier = song.url.split('/').pop();
               console.log(`[SONG RANGE] Mapped uploaded song: ${song.name} -> ${songIdentifier}`);
             }
@@ -1608,7 +1610,7 @@
          }
       }
     });
-  
+
     console.log('[SONG RANGES]', songRanges);
   }
 
