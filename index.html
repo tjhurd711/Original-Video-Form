@@ -1660,35 +1660,47 @@
         const perSlideSec = parseInt(document.getElementById('perSlideSec').value) || 5;
         // (slideCount - 2) normal slides + 2 slides at 2x duration
         totalSeconds = (slideCount - 2) * perSlideSec + (2 * perSlideSec * 2);
-        detailsText = `${slideCount} slides × ${perSlideSec}s each (first & last 2x)`;
-    
-      } else if (timingMode === 'fixedRuntime') {
-        totalSeconds = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
-        const avgPerSlide = Math.round(totalSeconds / slideCount);
-        detailsText = `Fixed runtime (≈${avgPerSlide}s per slide)`;
-    
-      } else if (timingMode === 'fitToSongs') {
-        // Sum all song durations
-        totalSeconds = selectedSongs.reduce((sum, song) => {
-          return sum + (song.duration || 0);
-        }, 0);
-    
-        if (totalSeconds === 0) {
-          detailsText = 'Add songs to calculate duration';
-          displayDiv.style.display = 'none';
-          return;
-        }
-    
-        const avgPerSlide = Math.round(totalSeconds / slideCount);
-        const songWord = selectedSongs.length === 1 ? 'song' : 'songs';
   
         // Format time for display in the message
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
         const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
   
-        detailsText = `Video will be ${timeDisplay} long based on ${selectedSongs.length} selected ${songWord} at ${avgPerSlide} seconds per slide (beginning and end slide at ${avgPerSlide * 2}s)`;
-      } 
+        detailsText = `Video will be ${timeDisplay} long with ${slideCount} slides at ${perSlideSec} seconds per slide (beginning and end slide at ${perSlideSec * 2}s)`;
+  
+      } else if (timingMode === 'fixedRuntime') {
+        totalSeconds = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+        const avgPerSlide = Math.round(totalSeconds / slideCount);
+  
+        // Format time for display in the message
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  
+        detailsText = `Video will be ${timeDisplay} long across ${slideCount} slides at approximately ${avgPerSlide} seconds per slide`;
+  
+      } else if (timingMode === 'fitToSongs') {
+        // Sum all song durations
+        totalSeconds = selectedSongs.reduce((sum, song) => {
+          return sum + (song.duration || 0);
+      }, 0);
+  
+      if (totalSeconds === 0) {
+        detailsText = 'Add songs to calculate duration';
+        displayDiv.style.display = 'none';
+        return;
+      }
+  
+      const avgPerSlide = Math.round(totalSeconds / slideCount);
+      const songWord = selectedSongs.length === 1 ? 'song' : 'songs';
+  
+      // Format time for display in the message
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  
+      detailsText = `Video will be ${timeDisplay} long based on ${selectedSongs.length} selected ${songWord} at ${avgPerSlide} seconds per slide (beginning and end slide at ${avgPerSlide * 2}s)`;
+    }
   
       // Format as MM:SS
       const minutes = Math.floor(totalSeconds / 60);
