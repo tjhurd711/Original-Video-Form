@@ -699,7 +699,7 @@
   <div class="container">
     <div class="header">
       <img src="https://www.dropbox.com/scl/fi/i5ye9vg5wzfvxwyrwczq6/Untitled-940-x-600-px-1400-x-600-px.png?rlkey=rk5t9ot5gchvjcqx71lwiln1o&st=8orea38d&dl=1" alt="Memorial Video Logo" class="header-logo">
-      <h1>✨ Customize Your Memorial Video</h1>
+      <h1 id="headerTitle">✨ Customize Your Memorial Video</h1>
       <p>Review your slideshow and choose your preferences below</p>
     </div>
     
@@ -1219,6 +1219,12 @@
     function initializePage() {
       // Set up slideshow preview
       setupSlideshowPreview();
+
+      // Update header with deceased person's name if available
+      if (fullName && fullName !== '' && fullName !== 'your loved one') {
+        document.getElementById('headerTitle').textContent = `✨ Customize Memorial Video for ${fullName}`;
+        document.title = `Memorial Video for ${fullName}`;
+      }
       
       // Render song library
       renderLibrary();
