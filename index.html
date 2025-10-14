@@ -1970,36 +1970,40 @@
         // STEP 2: Upload custom songs to S3 and collect all song URLs
         showToast('Uploading songs...', 'success');
         const songs = [];
-        
+        const songFilenames = [];  // ✅ ADD THIS
+
         for (let i = 0; i < selectedSongs.length; i++) {
           const song = selectedSongs[i];
-          
+  
           if (song.isLibrary) {
             // Library song - use direct URL
             songs.push(song.url);
+            songFilenames.push(song.name);  // ✅ ADD THIS (original library filename)
           } else if (song.file) {
             // Custom song - upload to S3
             try {
               const uploadedUrl = await uploadFileToS3(song.file, 'song', i + 1);
               if (uploadedUrl) {
                 songs.push(uploadedUrl);
+                songFilenames.push(song.file.name);  // ✅ ADD THIS (original uploaded filename)
               } else {
                 throw new Error(`Failed to upload ${song.name} - no URL returned`);
               }
-            } catch (error) {
-              console.error(`[UPLOAD ERROR] Failed to upload song ${song.name}:`, error);
-              showToast(`Failed to upload ${song.name}: ${error.message}`, 'error');
-              throw new Error(`Song upload failed: ${song.name}`);
-            }
-          }
+           } catch (error) {
+             console.error(`[UPLOAD ERROR] Failed to upload song ${song.name}:`, error);
+             showToast(`Failed to upload ${song.name}: ${error.message}`, 'error');
+             throw new Error(`Song upload failed: ${song.name}`);
+           }
         }
-        
-        if (songs.length === 0) {
-          throw new Error('No songs to process');
-        }
-        
-        console.log(`[SONGS] Successfully prepared ${songs.length} songs`);
-        console.log('[SONGS] URLs:', songs);
+     }
+
+     if (songs.length === 0) {
+       throw new Error('No songs to process');
+     }
+
+     console.log(`[SONGS] Successfully prepared ${songs.length} songs`);
+     console.log('[SONGS] URLs:', songs);
+     console.log('[SONGS] Original filenames:', songFilenames);  // ✅ ADD THIS
         
         // STEP 3: Build settings
         const timingMode = document.querySelector('input[name="timingMode"]:checked').value;
@@ -2036,6 +2040,7 @@
           presentationType: presentationType,
           presentationSource: presentationSource,
           songs: songs,
+          songFilenames: songFilenames,
           settings: settings
         };
         
@@ -2084,7 +2089,6 @@
           jobId: uid,
           fileType: fileType,
           fileExtension: file.name.split('.').pop()
-          originalFilename: file.name
         };
         
         if (fileNumber !== null) {
