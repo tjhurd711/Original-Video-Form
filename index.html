@@ -1299,6 +1299,21 @@
       const separator = url.includes('?') ? '&' : '?';
       return url + separator + 'action=embedview&wdStartOn=1';
     }
+
+        // --- NEW: safer Office Web Viewer wrapper for SharePoint / OneDrive embeds ---
+    function toOfficeWebViewer(url) {
+      // Ensures SharePoint/OneDrive files can be iframed without X-Frame errors
+      const needsDownload =
+        url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms');
+
+      // Add ?download=1 to make the link a direct file URL (not a page)
+      const directish = needsDownload
+        ? (url.includes('?') ? `${url}&download=1` : `${url}?download=1`)
+        : url;
+
+      return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(directish)}`;
+    }
+
     
 function setupSlideshowPreview() {
   const iframe = document.getElementById('previewIframe');
@@ -1332,17 +1347,13 @@ function setupSlideshowPreview() {
       iframeContainer.style.display = 'block';
       sharepointPreview.style.display = 'none';
 
-    } else if (slideshowUrl.includes('sharepoint.com')) {
-      // SharePoint / OneDrive for Business
-      final = convertSharePointToEmbedUrl(slideshowUrl);
-      previewHeader.textContent = '🔍 Preview: Original PowerPoint';
-      iframe.src = final;
-      iframeContainer.style.display = 'block';
-      sharepointPreview.style.display = 'none';
-
-    } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
-      // OneDrive consumer – Office Web Viewer
-      final = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(slideshowUrl)}`;
+    } else if (
+      slideshowUrl.includes('sharepoint.com') ||
+      slideshowUrl.includes('onedrive.live.com') ||
+      slideshowUrl.includes('1drv.ms')
+    ) {
+      // SharePoint / OneDrive (always route through Office Web Viewer)
+      final = toOfficeWebViewer(slideshowUrl);
       previewHeader.textContent = '🔍 Preview: Original PowerPoint';
       iframe.src = final;
       iframeContainer.style.display = 'block';
@@ -1360,7 +1371,6 @@ function setupSlideshowPreview() {
     previewSection.style.display = 'block';
   }
 }
-
     
     function setupEventListeners() {
       // Slideshow version radio buttons
