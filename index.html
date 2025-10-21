@@ -1296,7 +1296,7 @@
       return url + separator + 'action=embedview&wdStartOn=1';
     }
     
-    function setupSlideshowPreview() {
+function setupSlideshowPreview() {
       const iframe = document.getElementById('previewIframe');
       const urlDisplay = document.getElementById('previewUrl');
       const previewSection = document.getElementById('slideshowPreview');
@@ -1309,8 +1309,17 @@
           // Google Slides
           embedUrl = slideshowUrl.replace('/edit', '/embed');
           previewHeader.textContent = '🔍 Preview: Original Slideshow';
-        } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
-          // PowerPoint URL - use Office Web Apps viewer
+        } else if (slideshowUrl.includes('sharepoint.com/:p:')) {
+          // SharePoint - extract file ID and use native embed
+          const match = slideshowUrl.match(/\/:p:\/[^\/]+\/[^\/]+\/([^\/?]+)/);
+          if (match && match[1]) {
+            const fileId = match[1];
+            const baseUrl = slideshowUrl.split('/:p:')[0];
+            embedUrl = `${baseUrl}/_layouts/15/Doc.aspx?sourcedoc=${fileId}&action=embedview&wdStartOn=1`;
+            previewHeader.textContent = '🔍 Preview: Original PowerPoint';
+          }
+        } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
+          // OneDrive consumer - use Office Web Viewer
           const encodedUrl = encodeURIComponent(slideshowUrl);
           embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
           previewHeader.textContent = '🔍 Preview: Original PowerPoint';
@@ -1488,17 +1497,38 @@
       const previewHeader = document.getElementById('previewHeader');
       
       if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // **[FIXED]** Use the universal Office Web Viewer to bypass X-Frame-Options
-        const encodedUrl = encodeURIComponent(url);
-        const embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+        // Extract the SharePoint details from the URL
+        let embedUrl;
         
-        previewHeader.textContent = '🔍 Preview: PowerPoint';
-        iframe.src = embedUrl;
-        urlDisplay.textContent = `URL: ${url}`;
-        slideshowPreview.style.display = 'block';
+        if (url.includes('sharepoint.com/:p:')) {
+          // SharePoint format - extract file ID
+          const match = url.match(/\/:p:\/[^\/]+\/[^\/]+\/([^\/?]+)/);
+          if (match && match[1]) {
+            const fileId = match[1];
+            const baseUrl = url.split('/:p:')[0];
+            
+            // Use SharePoint's native embed viewer
+            embedUrl = `${baseUrl}/_layouts/15/Doc.aspx?sourcedoc=${fileId}&action=embedview&wdStartOn=1`;
+          }
+        } else if (url.includes('onedrive.live.com') || url.includes('1drv.ms')) {
+          // OneDrive consumer format
+          const encodedUrl = encodeURIComponent(url);
+          embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+        }
         
-        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
-    } else {
+        if (embedUrl) {
+          previewHeader.textContent = '🔍 Preview: PowerPoint';
+          iframe.src = embedUrl;
+          urlDisplay.textContent = `URL: ${url}`;
+          slideshowPreview.style.display = 'block';
+          pptxFilePreview.style.display = 'none';
+          
+          console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        } else {
+          slideshowPreview.style.display = 'none';
+          pptxFilePreview.style.display = 'none';
+        }
+      } else {
         slideshowPreview.style.display = 'none';
         pptxFilePreview.style.display = 'none';
       }
