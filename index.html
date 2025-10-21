@@ -1309,16 +1309,7 @@ function setupSlideshowPreview() {
           // Google Slides
           embedUrl = slideshowUrl.replace('/edit', '/embed');
           previewHeader.textContent = '🔍 Preview: Original Slideshow';
-        } else if (slideshowUrl.includes('sharepoint.com/:p:')) {
-          // SharePoint - extract file ID and use native embed
-          const match = slideshowUrl.match(/\/:p:\/[^\/]+\/[^\/]+\/([^\/?]+)/);
-          if (match && match[1]) {
-            const fileId = match[1];
-            const baseUrl = slideshowUrl.split('/:p:')[0];
-            embedUrl = `${baseUrl}/_layouts/15/Doc.aspx?sourcedoc=${fileId}&action=embedview&wdStartOn=1`;
-            previewHeader.textContent = '🔍 Preview: Original PowerPoint';
-          }
-        } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
+        } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
           // OneDrive consumer - use Office Web Viewer
           const encodedUrl = encodeURIComponent(slideshowUrl);
           embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
