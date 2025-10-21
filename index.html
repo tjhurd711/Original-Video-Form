@@ -772,7 +772,17 @@
           <div class="preview-header" id="previewHeader">
             🔍 Preview: Slideshow
           </div>
-          <iframe id="previewIframe" class="preview-iframe" src="" frameborder="0"></iframe>
+          <div id="iframeContainer" style="display:block;">
+            <iframe id="previewIframe" class="preview-iframe" src="" frameborder="0"></iframe>
+          </div>
+          <div id="sharepointPreview" style="display:none; padding: 40px; text-align: center; background: white; border-radius: 8px; border: 2px dashed #2196F3;">
+            <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+            <div style="font-size: 18px; font-weight: 600; color: #333; margin-bottom: 8px;">PowerPoint Presentation Confirmed</div>
+            <div style="font-size: 14px; color: #666; margin-bottom: 20px;">Click below to open and verify your presentation</div>
+            <button id="openPresentationBtn" style="padding: 14px 32px; background: #2196F3; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+              🔗 Open Presentation
+            </button>
+          </div>
           <div class="preview-url" id="previewUrl"></div>
         </div>
         
@@ -1299,22 +1309,16 @@
           // Google Slides
           embedUrl = slideshowUrl.replace('/edit', '/embed');
           previewHeader.textContent = '🔍 Preview: Original Slideshow';
-          previewSection.style.display = 'block';
-          iframe.src = embedUrl;
-          urlDisplay.textContent = `URL: ${slideshowUrl}`;
         } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
-            // **[FIXED]** Use the universal Office Web Viewer to bypass X-Frame-Options
-            const encodedUrl = encodeURIComponent(slideshowUrl);
-            embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
-
-            previewHeader.textContent = '🔍 Preview: Original PowerPoint';
-            previewSection.style.display = 'block';
-            iframe.src = embedUrl;
-            urlDisplay.textContent = `URL: ${slideshowUrl}`;
-            
-            console.log('[PREVIEW] Original URL:', slideshowUrl);
-            console.log('[PREVIEW] Converted embed URL:', embedUrl);
+          // PowerPoint URL - use Office Web Apps viewer
+          const encodedUrl = encodeURIComponent(slideshowUrl);
+          embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+          previewHeader.textContent = '🔍 Preview: Original PowerPoint';
         }
+        
+        iframe.src = embedUrl;
+        urlDisplay.textContent = `URL: ${slideshowUrl}`;
+        previewSection.style.display = 'block';
       }
     }
     
