@@ -1264,6 +1264,27 @@
       // Validate form
       validateForm();
     }
+
+    function convertSharePointToEmbedUrl(url) {
+      // Handle SharePoint personal OneDrive URLs (celebrife-my.sharepoint.com)
+      if (url.includes('sharepoint.com/:p:')) {
+        // Extract the file ID from the URL
+        // Format: https://[tenant]-my.sharepoint.com/:p:/g/personal/[user]/[fileId]?params
+        const match = url.match(/\/:p:\/[^\/]+\/[^\/]+\/([^\/?]+)/);
+        if (match && match[1]) {
+          const fileId = match[1];
+          const baseUrl = url.split('/:p:')[0];
+          return `${baseUrl}/_layouts/15/Doc.aspx?sourcedoc=${fileId}&action=embedview&wdStartOn=1`;
+        }
+      }
+      
+      // Fallback: try adding embed parameters
+      if (url.includes('action=embedview')) {
+        return url;
+      }
+      const separator = url.includes('?') ? '&' : '?';
+      return url + separator + 'action=embedview&wdStartOn=1';
+    }
     
     function setupSlideshowPreview() {
       const iframe = document.getElementById('previewIframe');
@@ -1282,17 +1303,15 @@
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
         } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
-          // PowerPoint URL - use SharePoint native embed
-          if (!slideshowUrl.includes('action=embedview')) {
-            const separator = slideshowUrl.includes('?') ? '&' : '?';
-            embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
-          }
+          // PowerPoint URL - convert to embed format
+          embedUrl = convertSharePointToEmbedUrl(slideshowUrl);
           previewHeader.textContent = '🔍 Preview: Original PowerPoint';
           previewSection.style.display = 'block';
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
           
-          console.log('[PREVIEW] Initial PowerPoint embed URL:', embedUrl);
+          console.log('[PREVIEW] Original URL:', slideshowUrl);
+          console.log('[PREVIEW] Converted embed URL:', embedUrl);
         }
       }
     }
@@ -1438,19 +1457,17 @@
         iframe.src = embedUrl;
         urlDisplay.textContent = `URL: ${url}`;
         slideshowPreview.style.display = 'block';
-      } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // PowerPoint URL - use SharePoint native embed
-        let embedUrl = url;
-        if (!url.includes('action=embedview')) {
-          const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
-        }
-        previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
+      if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
+        // Convert SharePoint URL to embed format
+        const embedUrl = convertSharePointToEmbedUrl(url);
+        
+        previewHeader.textContent = '🔍 Preview: PowerPoint';
         iframe.src = embedUrl;
         urlDisplay.textContent = `URL: ${url}`;
         slideshowPreview.style.display = 'block';
         
-        console.log('[PREVIEW] Copy PowerPoint embed URL:', embedUrl);
+        console.log('[PREVIEW] PowerPoint original URL:', url);
+        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
       } else {
         slideshowPreview.style.display = 'none';
       }
