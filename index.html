@@ -1103,18 +1103,12 @@
       
       <!-- SUBMIT SECTION -->
       <div class="submit-section">
-        <button id="submitBtn" class="btn-submit" disabled>
-          🚀 Create My Memorial Video
-        </button>
-
-        <!-- TEMPORARY TEST BUTTON -->
-        <button type="button" onclick="showCalculationModal('125', '6:45', 'Your video will be approximately 6 minutes and 45 seconds long with 125 slides at 3.2 seconds per slide.')" 
-                style="margin-top: 20px; padding: 12px 24px; background: orange; color: white; border: none; border-radius: 8px; cursor: pointer;">
-          TEST MODAL
+        <button id="submitBtn" class="btn-submit" onclick="calculateVideo()" disabled>
+          📊 Calculate My Video
         </button>
         
         <p class="submit-note">
-          You'll receive an email with your video in 5-15 minutes
+          We'll calculate your video length and show you a preview before creating it
         </p>
       </div>
     </div>
@@ -1170,6 +1164,7 @@
     // Configuration
     const API_ENDPOINT = 'https://p273y4lw2j.execute-api.us-east-2.amazonaws.com/prod/process-job';
     const S3_UPLOAD_API = 'https://4hyy6kr2id.execute-api.us-east-2.amazonaws.com/prod/generate-upload-url';
+    const CALCULATE_API = 'https://4hyy6kr2id.execute-api.us-east-2.amazonaws.com/prod/jobs';
     const MAX_SONGS = 6;
     
     // Song Library
@@ -2157,8 +2152,131 @@ function setupSlideshowPreview() {
         setupSongRangeSliders();
       }
     }
+
+    async function calculateVideo() {
+      try {
+        showLoading(true);
+        
+        // STEP 1: Determine presentation type and source
+        const slideshowVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
+        let presentationType = null;
+        let presentationSource = null;
+        
+        if (slideshowVersion === 'original') {
+          if (slideshowUrl.includes('docs.google.com/presentation')) {
+            presentationType = 'google_slides';
+            presentationSource = slideshowUrl;
+          } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
+            presentationType = 'powerpoint_url';
+            presentationSource = slideshowUrl;
+          } else {
+            throw new Error('Could not determine presentation type from original URL');
+          }
+        } else if (slideshowVersion === 'copy') {
+          const newUrl = document.getElementById('newGoogleSlidesUrl').value;
+          presentationType = 'google_slides';
+          presentationSource = newUrl;
+        } else if (slideshowVersion === 'download') {
+          const pptxFile = document.getElementById('pptxFile').files[0];
+          const pptxUrl = document.getElementById('pptxUrl').value;
+          
+          if (pptxFile) {
+            // Upload file to S3 first
+            showToast('Uploading presentation...', 'success');
+            const uploadedUrl = await uploadFileToS3(pptxFile, 'presentation');
+            presentationType = 'powerpoint_file';
+            presentationSource = uploadedUrl;
+          } else if (pptxUrl) {
+            presentationType = 'powerpoint_url';
+            presentationSource = pptxUrl;
+          }
+        }
+        
+        if (!presentationType || !presentationSource) {
+          throw new Error('Could not determine presentation type');
+        }
+        
+        // STEP 2: Call calculate API to get slide count
+        showToast('Counting slides...', 'success');
+        const calculatePayload = {
+          presentationType: presentationType,
+          presentationSource: presentationSource
+        };
+        
+        console.log('[CALCULATE] Calling API:', `${CALCULATE_API}/${uid}/calculate`);
+        console.log('[CALCULATE] Payload:', calculatePayload);
+        
+        const calculateResponse = await fetch(`${CALCULATE_API}/${uid}/calculate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(calculatePayload)
+        });
+        
+        if (!calculateResponse.ok) {
+          const errorData = await calculateResponse.json().catch(() => ({}));
+          throw new Error(errorData.error || `Failed to calculate: HTTP ${calculateResponse.status}`);
+        }
+        
+        const calculateResult = await calculateResponse.json();
+        console.log('[CALCULATE] Result:', calculateResult);
+        
+        const slideCount = calculateResult.slideCount;
+        
+        // STEP 3: Calculate duration based on timing mode and songs
+        const timingMode = document.querySelector('input[name="timingMode"]:checked').value;
+        let estimatedSeconds = 0;
+        let durationText = '';
+        let summaryText = '';
+        
+        // Calculate total music duration
+        let totalMusicSeconds = 0;
+        for (const song of selectedSongs) {
+          totalMusicSeconds += song.duration || 180; // Default 3 min if no duration
+        }
+        
+        if (timingMode === 'fixedRuntime') {
+          estimatedSeconds = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+          const minutes = Math.floor(estimatedSeconds / 60);
+          const seconds = estimatedSeconds % 60;
+          durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          const perSlide = (estimatedSeconds / slideCount).toFixed(1);
+          summaryText = `Your video will be exactly ${minutes} minutes and ${seconds} seconds long with ${slideCount} slides (approximately ${perSlide} seconds per slide).`;
+          
+        } else if (timingMode === 'perSlide') {
+          const perSlide = parseInt(document.getElementById('perSlideSec').value) || 5;
+          estimatedSeconds = slideCount * perSlide;
+          const minutes = Math.floor(estimatedSeconds / 60);
+          const seconds = estimatedSeconds % 60;
+          durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          summaryText = `Your video will be approximately ${minutes} minutes and ${seconds} seconds long with ${slideCount} slides at ${perSlide} seconds per slide.`;
+          
+        } else if (timingMode === 'matchMusic') {
+          estimatedSeconds = totalMusicSeconds;
+          const minutes = Math.floor(estimatedSeconds / 60);
+          const seconds = estimatedSeconds % 60;
+          durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          const perSlide = (estimatedSeconds / slideCount).toFixed(1);
+          summaryText = `Your video will match your music length of ${minutes} minutes and ${seconds} seconds with ${slideCount} slides (approximately ${perSlide} seconds per slide).`;
+        }
+        
+        showLoading(false);
+        
+        // STEP 4: Show modal with results
+        showCalculationModal(slideCount, durationText, summaryText);
+        
+      } catch (error) {
+        console.error('[CALCULATE ERROR]', error);
+        showLoading(false);
+        showToast('Failed to calculate: ' + error.message, 'error');
+      }
+    }
     
-    async function handleSubmit() {
+    async function finalSubmit() {
       try {
         showLoading(true);
         
