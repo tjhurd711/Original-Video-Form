@@ -1264,27 +1264,6 @@
       // Validate form
       validateForm();
     }
-
-    function convertSharePointToEmbedUrl(url) {
-      // Handle SharePoint personal OneDrive URLs (celebrife-my.sharepoint.com)
-      if (url.includes('sharepoint.com/:p:')) {
-        // Extract the file ID from the URL
-        // Format: https://[tenant]-my.sharepoint.com/:p:/g/personal/[user]/[fileId]?params
-        const match = url.match(/\/:p:\/[^\/]+\/[^\/]+\/([^\/?]+)/);
-        if (match && match[1]) {
-          const fileId = match[1];
-          const baseUrl = url.split('/:p:')[0];
-          return `${baseUrl}/_layouts/15/Doc.aspx?sourcedoc=${fileId}&action=embedview&wdStartOn=1`;
-        }
-      }
-      
-      // Fallback: try adding embed parameters
-      if (url.includes('action=embedview')) {
-        return url;
-      }
-      const separator = url.includes('?') ? '&' : '?';
-      return url + separator + 'action=embedview&wdStartOn=1';
-    }
     
     function setupSlideshowPreview() {
       const iframe = document.getElementById('previewIframe');
@@ -1302,17 +1281,25 @@
           previewSection.style.display = 'block';
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
-        } else if (slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('1drv.ms')) {
-          // PowerPoint URL - convert to embed format
-          embedUrl = convertSharePointToEmbedUrl(slideshowUrl);
+        else if (
+          slideshowUrl.includes('sharepoint.com') ||
+          slideshowUrl.includes('onedrive.live.com') ||
+          slideshowUrl.includes('1drv.ms')
+        ) {
+          // Use direct SharePoint/OneDrive URL with embedview parameters
+          let embedUrl = slideshowUrl;
+          if (!slideshowUrl.includes('action=embedview')) {
+            const separator = slideshowUrl.includes('?') ? '&' : '?';
+            embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
+          }
           previewHeader.textContent = '🔍 Preview: Original PowerPoint';
           previewSection.style.display = 'block';
           iframe.src = embedUrl;
           urlDisplay.textContent = `URL: ${slideshowUrl}`;
-          
-          console.log('[PREVIEW] Original URL:', slideshowUrl);
-          console.log('[PREVIEW] Converted embed URL:', embedUrl);
+
+          console.log('[PREVIEW] Using embedview URL:', embedUrl);
         }
+
       }
     }
     
