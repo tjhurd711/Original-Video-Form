@@ -29,7 +29,7 @@
     }
     
     .header {
-      background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+      background: linear-gradient(180deg, #1e3c72 0%, #2a298 100%);
       color: white;
       padding: 40px 30px;
       text-align: center;
@@ -41,7 +41,7 @@
     }
     
     .header p {
-      opacity: 0.95;
+      opacity: 0.9;
       font-size: 16px;
       line-height: 1.5;
     }
@@ -60,7 +60,7 @@
     }
     
     .intro-box {
-      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+      background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f 100%);
       border-left: 4px solid #667eea;
       border-radius: 12px;
       padding: 24px;
@@ -84,8 +84,8 @@
     }
     
     .section:hover {
-      border-color: #2a5298;
-      box-shadow: 0 4px 12px rgba(42, 82, 152, 0.1);
+      border-color: #2a298;
+      box-shadow: 0 4px 12px rgba(42, 82, 12, 0.1);
     }
     
     .section-header {
@@ -2420,13 +2420,9 @@ function setupSlideshowPreview() {
         console.log('[SUBMIT] Success:', result);
         
         showLoading(false);
-        
-        // Show success message
-        alert('✅ Your memorial video is being created!\n\nYou will receive an email in 5-15 minutes with your video and a link to make any edits.');
-        
-        // Disable submit button
-        document.getElementById('submitBtn').disabled = true;
-        document.getElementById('submitBtn').textContent = '✅ Submitted Successfully';
+
+        // Redirect to thank you page
+        window.location.href = `thank-you.html?jobId=${encodeURIComponent(uid)}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(firstName)}`;
         
       } catch (error) {
         console.error('[SUBMIT ERROR]', error);
