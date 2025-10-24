@@ -1544,7 +1544,7 @@ function setupSlideshowPreview() {
       document.getElementById('fixedRuntimeSec').addEventListener('input', calculateVideoDuration);
       
       // Submit button
-      document.getElementById('submitBtn').addEventListener('click', handleSubmit);
+      document.getElementById('submitBtn').addEventListener('click', calculateVideo);
     }
     
     function handleSlideshowVersionChange(e) {
