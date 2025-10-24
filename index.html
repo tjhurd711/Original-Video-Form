@@ -66,6 +66,8 @@
       padding: 24px;
       margin-bottom: 30px;
       line-height: 1.7;
+      position: relative;  /* Added */
+      z-index: 1;          /* Added */
     }
     
     .intro-box h2 {
@@ -1418,8 +1420,8 @@
       setupSlideshowPreview();
 
       // Update header with deceased person's name if available
-      if (fullName && fullName !== '' && fullName !== 'your loved one') {
-        document.getElementById('headerTitle').textContent = `✨ Customize Memorial Video for ${fullName}`;
+      if (firstName && firstName !== '' && firstName !== 'there') {
+        document.getElementById('headerTitle').textContent = `✨ Customize Memorial Video for ${firstName}`;
         document.title = `Memorial Video for ${fullName}`;
       }
       
