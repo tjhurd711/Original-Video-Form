@@ -1975,6 +1975,9 @@ function setupSlideshowPreview() {
     }
 
     function calculateVideoDuration() {
+      // Function disabled - slideCount input was removed
+      return;
+  
       const slideCountInput = document.getElementById('slideCount');
       const slideCount = parseInt(slideCountInput.value);
       const timingMode = document.querySelector('input[name="timingMode"]:checked')?.value;
