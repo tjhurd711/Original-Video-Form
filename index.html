@@ -1653,6 +1653,7 @@ function setupSlideshowPreview() {
       
       // Custom song upload
       document.getElementById('uploadLabel').addEventListener('click', showMusicTermsModal);
+      document.getElementById('customSongUpload').addEventListener('change', handleCustomSongUpload);
       
       // Form changes
       document.querySelectorAll('select, input').forEach(element => {
@@ -2676,11 +2677,6 @@ function setupSlideshowPreview() {
       document.getElementById('customSongUpload').click();
     }
 
-    // Add the actual file change handler
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('customSongUpload').addEventListener('change', handleCustomSongUpload);
-    });
-    
-  </script>
-</body>
-</html>
+    </script>
+    </body>
+    </html>
