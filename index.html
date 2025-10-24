@@ -2278,6 +2278,7 @@ function setupSlideshowPreview() {
     
     async function finalSubmit() {
       try {
+        closeCalculationModal();
         showLoading(true);
         
         // STEP 1: Determine presentation type and source
