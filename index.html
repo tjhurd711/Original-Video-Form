@@ -2141,6 +2141,28 @@ function setupSlideshowPreview() {
       if (selectedSongs.length === 0) {
         isValid = false;
       }
+
+      // Check song ranges if Specify Placement is selected
+      const musicDistribution = document.getElementById('musicDistribution').value;
+      if (musicDistribution === 'specifyPlacement' && selectedSongs.length > 0) {
+        for (let i = 0; i < selectedSongs.length; i++) {
+          const startInput = document.getElementById(`songRange${i}Start`);
+          const endInput = document.getElementById(`songRange${i}End`);
+    
+          if (!startInput || !endInput || !startInput.value || !endInput.value) {
+            isValid = false;
+            break;
+          }
+    
+          const start = parseInt(startInput.value);
+          const end = parseInt(endInput.value);
+    
+          if (start < 1 || end < 1 || start > end) {
+            isValid = false;
+            break;
+          }
+        }
+      }
       
       submitBtn.disabled = !isValid;
     }
@@ -2277,6 +2299,7 @@ function setupSlideshowPreview() {
     });
 
     console.log('[SONG RANGES]', songRanges);
+    validateForm();
   }
     // Update song range sliders when song count changes
     function updateSongRangeSliders() {
