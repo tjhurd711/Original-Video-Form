@@ -976,7 +976,7 @@
         </div>
         
         <div class="form-group">
-          <label>Your Selected Songs (drag to reorder, max 6 total)</label>
+          <label>Your Selected Songs (max 6 total). Click “up” or “down” arrows to change song order.</label>
           <div id="songList" class="song-list">
             <!-- Populated by JS -->
           </div>
@@ -1783,8 +1783,8 @@ function setupSlideshowPreview() {
             </div>
             <div class="song-controls">
               ${song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️ Play Song</button>` : ''}
-              <button class="btn-small btn-move" onclick="moveSongUp(${index})" ${index === 0 ? 'disabled' : ''}>⬆️</button>
-              <button class="btn-small btn-move" onclick="moveSongDown(${index})" ${index === selectedSongs.length - 1 ? 'disabled' : ''}>⬇️</button>
+              <button class="btn-small btn-move" onclick="moveSongUp(${index})" ${index === 0 ? 'disabled' : ''}>⬆️ Move Up</button>
+              <button class="btn-small btn-move" onclick="moveSongDown(${index})" ${index === selectedSongs.length - 1 ? 'disabled' : ''}>⬇️ Move Down</button>
               <button class="btn-small btn-danger" onclick="removeSong(${index})">🗑️</button>
             </div>
             ${song.url ? `<audio id="${audioId}" src="${song.url}" preload="none"></audio>` : ''}
