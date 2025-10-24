@@ -298,6 +298,7 @@
     .btn-play {
       background: #2196F3;
       color: white;
+      min-width: 110px;
     }
     
     .btn-play:hover {
@@ -309,7 +310,8 @@
     }
     
     .btn-add-library {
-      flex: 1;
+      flex: 0 0 auto;
+      min-width: 95px;
       padding: 8px 12px;
       background: #FF9800;
       color: white;
@@ -948,7 +950,7 @@
         
         <div class="library-section">
           <div class="library-header">
-            🎼 Song Library - Choose from our curated memorial music
+            🎼 Select Royalty Free Songs to add to your video (you can update the song order below)
           </div>
           <div style="margin-bottom: 15px;">
             <label for="genreSelect" style="font-weight: 600; color: #e65100; margin-bottom: 6px; display: block;">Select Genre:</label>
@@ -1706,14 +1708,14 @@ function setupSlideshowPreview() {
         const isAdded = selectedSongs.some(s => s.id === song.id);
         const cardClass = isAdded ? 'library-song-card added' : 'library-song-card';
         const btnClass = isAdded ? 'btn-add-library added' : 'btn-add-library';
-        const btnText = isAdded ? '✓ Added' : '+ Add';
+        const btnText = isAdded ? '✓ Added' : '+ Add Song';
         const audioId = `audio-lib-${song.id}`;
         
         html += `
           <div class="${cardClass}" data-song-id="${song.id}">
             <div class="library-song-name">${song.displayName}</div>
             <div class="library-song-controls">
-              <button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️</button>
+              <button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️ Play Song</button>
               <button class="${btnClass}" onclick="addLibrarySong('${song.id}')" ${isAdded || selectedSongs.length >= MAX_SONGS ? 'disabled' : ''}>
                 ${btnText}
               </button>
@@ -1781,7 +1783,7 @@ function setupSlideshowPreview() {
               ${badge}
             </div>
             <div class="song-controls">
-              ${song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️</button>` : ''}
+              ${song.url ? `<button class="btn-small btn-play" onclick="togglePlay('${audioId}', this)">▶️ Play Song</button>` : ''}
               <button class="btn-small btn-move" onclick="moveSongUp(${index})" ${index === 0 ? 'disabled' : ''}>⬆️</button>
               <button class="btn-small btn-move" onclick="moveSongDown(${index})" ${index === selectedSongs.length - 1 ? 'disabled' : ''}>⬇️</button>
               <button class="btn-small btn-danger" onclick="removeSong(${index})">🗑️</button>
