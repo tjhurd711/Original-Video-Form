@@ -964,6 +964,16 @@
             <!-- Populated by JS -->
           </div>
         </div>
+
+        <div class="upload-section" id="uploadSection">
+          <label class="upload-label" id="uploadLabel">
+            📤 Upload Your Own Songs (MP3)
+            <input type="file" id="customSongUpload" accept=".mp3,audio/mpeg" multiple style="display: none;">
+          </label>
+          <div style="margin-top: 8px; font-size: 13px; color: #666;">
+            <span id="songCountDisplay">0 songs selected</span>
+          </div>
+        </div>
         
         <div class="form-group">
           <label>Your Selected Songs (drag to reorder, max 6 total)</label>
@@ -972,17 +982,6 @@
           </div>
         </div>
         
-        <div class="upload-section" id="uploadSection">
-          <label class="upload-label" id="uploadLabel">
-            📤 Upload Your Own Songs (MP3)
-            <input type="file" id="customSongUpload" accept=".mp3,audio/mpeg" multiple style="display: none;">
-          </label>
-          <div style="margin-top: 8px; font-size: 13px; color: #666;">
-            <span id="songCountDisplay">0 of 6 songs</span>
-          </div>
-        </div>
-      </div>
-      
       <!-- SECTION 3: Video Timing -->
       <div class="section">
         <div class="section-header">
@@ -1864,7 +1863,7 @@ function setupSlideshowPreview() {
       const uploadSection = document.getElementById('uploadSection');
       const uploadLabel = document.getElementById('uploadLabel');
       
-      display.textContent = `${selectedSongs.length} of ${MAX_SONGS} songs`;
+      display.textContent = `${selectedSongs.length} songs selected`;
       
       if (selectedSongs.length >= MAX_SONGS) {
         uploadSection.classList.add('max-reached');
