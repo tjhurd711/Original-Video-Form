@@ -909,8 +909,24 @@
             🔍 Preview: Slideshow
           </div>
           <iframe id="previewIframe" class="preview-iframe" src="" frameborder="0"></iframe>
-          <div class="preview-url" id="previewUrl"></div>
-        </div>
+          <div style="margin-top: 20px; text-align: center;">
+            <a id="editSlidesButton" href="" target="_blank" 
+               style="display: inline-block; 
+                      padding: 14px 28px; 
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                      color: white; 
+                      text-decoration: none; 
+                      border-radius: 8px; 
+                      font-weight: 600; 
+                      font-size: 16px;
+                      transition: all 0.3s;
+                      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);"
+               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+              🎨 Edit My Slides (edits will auto-save)
+            </a>
+          </div>
+        
         
         <!-- PowerPoint File Preview (Filename only) -->
         <div id="pptxFilePreview" class="preview-section" style="display:none; background: #fff9e6; border-color: #FF9800;">
@@ -1457,7 +1473,7 @@ function setupSlideshowPreview() {
       previewHeader.textContent = '🔍 Preview: Original Google Slides';
       previewSection.style.display = 'block';
       iframe.src = embedUrl;
-      urlDisplay.textContent = `URL: ${slideshowUrl}`;
+      document.getElementById('editSlidesButton').href = slideshowUrl;
     }
 
     // === POWERPOINT / ONEDRIVE / SHAREPOINT HANDLING ===
@@ -1475,7 +1491,7 @@ function setupSlideshowPreview() {
       previewHeader.textContent = '🔍 Preview: Original PowerPoint';
       previewSection.style.display = 'block';
       iframe.src = embedUrl;
-      urlDisplay.textContent = `URL: ${slideshowUrl}`;
+      document.getElementById('editSlidesButton').href = slideshowUrl;
 
       console.log('[PREVIEW] Using embedview URL:', embedUrl);
     }
