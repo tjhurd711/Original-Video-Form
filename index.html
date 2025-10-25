@@ -181,7 +181,7 @@
       width: 20px;
       height: 20px;
       cursor: pointer;
-      margin-top: 0px;
+      margin-top: 1px;
       flex-shrink: 0;
     }
     
@@ -191,15 +191,18 @@
     
     .radio-option-label {
       font-weight: 600;
-      display: block;
-      margin-bottom: 4px;
+      display: inline-block;
       font-size: 15px;
+      line-height: 20px;
+      vertical-align: top;
     }
     
     .radio-option-desc {
       font-size: 13px;
       color: #666;
       line-height: 1.4;
+      display: block;
+      margin-top: 4px;
     }
     
     .conditional-input {
@@ -959,8 +962,8 @@
             
             <label class="radio-option">
               <input type="radio" name="slideshowVersion" value="copy">
+              <span class="radio-option-label">I made a copy and used a separate online document for my revisions</span>
               <div class="radio-option-content">
-                <span class="radio-option-label">I made a copy and used a separate online document for my revisions</span>
                 <span class="radio-option-desc">Provide a new Google Slides URL (e.g., slideshow_v2)</span>
                 <div class="conditional-input" id="copyUrlInput" style="display:none;">
                   <label for="newGoogleSlidesUrl" style="font-size: 13px; margin-bottom: 6px;">New Google Slides URL:</label>
@@ -971,8 +974,8 @@
             
             <label class="radio-option">
               <input type="radio" name="slideshowVersion" value="download">
+              <span class="radio-option-label">I downloaded a version to my PC</span>
               <div class="radio-option-content">
-                <span class="radio-option-label">I downloaded a version to my PC</span>
                 <span class="radio-option-desc">Upload your PowerPoint file (.pptx) or provide a PowerPoint URL</span>
                 <div class="conditional-input" id="downloadInput" style="display:none;">
                   <div style="margin-bottom: 12px;">
@@ -1080,8 +1083,8 @@
           <div class="radio-group">
             <label class="radio-option">
               <input type="radio" name="timingMode" value="perSlide">
+              <span class="radio-option-label">Per Slide Duration</span>
               <div class="radio-option-content">
-                <span class="radio-option-label">Per Slide Duration</span>
                 <span class="radio-option-desc">Set how many seconds each slide should display</span>
                 <div class="conditional-input" id="perSlideInput" style="display:none;">
                   <label for="perSlideSec" style="font-size: 13px; margin-bottom: 6px;">Seconds per slide:</label>
@@ -1092,8 +1095,8 @@
             
             <label class="radio-option selected">
               <input type="radio" name="timingMode" value="fixedRuntime" checked>
+              <span class="radio-option-label">Fixed Total Runtime</span>
               <div class="radio-option-content">
-                <span class="radio-option-label">Fixed Total Runtime</span>
                 <span class="radio-option-desc">Set the total video length in seconds (recommended)</span>
                 <div class="conditional-input" id="fixedRuntimeInput">
                   <label for="fixedRuntimeSec" style="font-size: 13px; margin-bottom: 6px;">Total runtime (seconds):</label>
@@ -1104,8 +1107,8 @@
             
             <label class="radio-option">
               <input type="radio" name="timingMode" value="fitToSongs">
+              <span class="radio-option-label">Fit to Music Length</span>
               <div class="radio-option-content">
-                <span class="radio-option-label">Fit to Music Length</span>
                 <span class="radio-option-desc">Video duration matches your music (automatic)</span>
               </div>
             </label>
