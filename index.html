@@ -2311,7 +2311,7 @@ function setupSlideshowPreview() {
 
     async function calculateVideo() {
       try {
-        showLoading(true);
+        showLoading(true, 'Calculating Your Video...', 'Counting slides and estimating duration');
         
         // STEP 1: Determine presentation type and source
         const slideshowVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
@@ -2660,9 +2660,16 @@ function setupSlideshowPreview() {
       }
     }
     
-    function showLoading(show) {
+    function showLoading(show, message = 'Creating Your Video...', subtext = 'Please wait, this may take a few moments') {
       const overlay = document.getElementById('loadingOverlay');
-      overlay.classList.toggle('show', show);
+  
+      if (show) {
+        document.querySelector('.loading-text').textContent = message;
+        document.querySelector('.loading-subtext').textContent = subtext;
+        overlay.classList.add('show');
+      } else {
+        overlay.classList.remove('show');
+      }
     }
     
     function showToast(message, type = 'success') {
