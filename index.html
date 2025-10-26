@@ -2598,7 +2598,7 @@ function setupSlideshowPreview() {
           
           summaryText = `Your ${durationText} video uses Per Slide Duration mode with ${slideCount} slides at ${perSlide} seconds per slide, ${visualName} transitions, and ${songText} (${distributionName}).`;
           
-        } else if (timingMode === 'matchMusic') {
+        } else if (timingMode === 'fitToSongs') {
           estimatedSeconds = totalMusicSeconds;
           const minutes = Math.floor(estimatedSeconds / 60);
           const seconds = estimatedSeconds % 60;
