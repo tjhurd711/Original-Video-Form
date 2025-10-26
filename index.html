@@ -2534,7 +2534,21 @@ function setupSlideshowPreview() {
         // Calculate total music duration
         let totalMusicSeconds = 0;
         for (const song of selectedSongs) {
-          totalMusicSeconds += song.duration || 180; // Default 3 min if no duration
+          let songSeconds = 0;
+  
+          if (typeof song.duration === 'string') {
+            // Library song: convert "4:32" to seconds
+            const parts = song.duration.split(':');
+            songSeconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+          } else if (typeof song.duration === 'number') {
+            // Custom uploaded song: already in seconds
+            songSeconds = song.duration;
+          } else {
+            // No duration yet (custom song still loading): default 3 min
+            songSeconds = 180;
+          }
+  
+          totalMusicSeconds += songSeconds;
         }
         
         if (timingMode === 'fixedRuntime') {
