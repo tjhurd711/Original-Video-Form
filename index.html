@@ -2584,7 +2584,7 @@ function setupSlideshowPreview() {
           
         } else if (timingMode === 'perSlide') {
           const perSlide = parseInt(document.getElementById('perSlideSec').value) || 5;
-          estimatedSeconds = slideCount * perSlide;
+          estimatedSeconds = (slideCount * perSlide) + (perSlide * 2);
           const minutes = Math.floor(estimatedSeconds / 60);
           const seconds = estimatedSeconds % 60;
           durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
