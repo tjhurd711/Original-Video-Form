@@ -1660,6 +1660,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const uid = urlParams.get('uid');
     const email = urlParams.get('email');
+    const customerFirstName = urlParams.get('customerFirstName') || 'there';
     const firstName = urlParams.get('firstName') || 'there';
     const fullName = urlParams.get('fullName') || '';
     const slideshowUrl = urlParams.get('slideshowUrl') || '';
@@ -2764,7 +2765,7 @@ function setupSlideshowPreview() {
         // STEP 4: Build final payload
         const payload = {
           jobId: uid,
-          customerFirstName: firstName,
+          customerFirstName: customerFirstName,
           customerLastName: '', 
           presentationType: presentationType,
           presentationSource: presentationSource,
@@ -2796,7 +2797,7 @@ function setupSlideshowPreview() {
         showLoading(false);
 
         // Redirect to thank you page
-        window.location.href = `thank-you.html?jobId=${encodeURIComponent(uid)}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(firstName)}`;
+        window.location.href = `thank-you.html?jobId=${encodeURIComponent(uid)}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(customerFirstName)}`;
         
       } catch (error) {
         console.error('[SUBMIT ERROR]', error);
