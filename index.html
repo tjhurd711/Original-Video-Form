@@ -2901,8 +2901,29 @@ function setupSlideshowPreview() {
     }
 
     function showCalculationModal(slideCount, duration, summary) {
+      // Parse the duration (format: "M:SS")
+      const parts = duration.split(':');
+      const minutes = parseInt(parts[0]);
+      const seconds = parseInt(parts[1]);
+      const totalSeconds = (minutes * 60) + seconds;
+      
+      // Calculate range (± 9 seconds)
+      const minSeconds = Math.max(0, totalSeconds - 9);
+      const maxSeconds = totalSeconds + 9;
+      
+      // Convert back to M:SS format
+      const minMinutes = Math.floor(minSeconds / 60);
+      const minSecs = minSeconds % 60;
+      const maxMinutes = Math.floor(maxSeconds / 60);
+      const maxSecs = maxSeconds % 60;
+      
+      const minTime = `${minMinutes}:${minSecs.toString().padStart(2, '0')}`;
+      const maxTime = `${maxMinutes}:${maxSecs.toString().padStart(2, '0')}`;
+      
+      const durationRange = `${minTime} - ${maxTime}`;
+      
       document.getElementById('modalSlideCount').textContent = slideCount;
-      document.getElementById('modalDuration').textContent = duration;
+      document.getElementById('modalDuration').textContent = durationRange;
       document.getElementById('modalSummary').textContent = summary;
       document.getElementById('calculationModal').classList.add('show');
     }
