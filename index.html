@@ -2558,6 +2558,16 @@ function setupSlideshowPreview() {
           const seconds = estimatedSeconds % 60;
           durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
           
+          // Calculate time range (± 9 seconds)
+          const minSeconds = Math.max(0, estimatedSeconds - 9);
+          const maxSeconds = estimatedSeconds + 9;
+          const minMinutes = Math.floor(minSeconds / 60);
+          const minSecs = minSeconds % 60;
+          const maxMinutes = Math.floor(maxSeconds / 60);
+          const maxSecs = maxSeconds % 60;
+          const minTime = `${minMinutes}:${minSecs.toString().padStart(2, '0')}`;
+          const maxTime = `${maxMinutes}:${maxSecs.toString().padStart(2, '0')}`;
+          
           const perSlide = (estimatedSeconds / slideCount).toFixed(1);
           
           // Get visual package and music distribution
@@ -2581,7 +2591,7 @@ function setupSlideshowPreview() {
           const songCount = selectedSongs.length;
           const songText = songCount === 1 ? '1 song' : `${songCount} songs`;
           
-          summaryText = `Your ${durationText} video uses Fixed Runtime mode with ${slideCount} slides (approximately ${perSlide} seconds per slide), ${visualName} transitions, and ${songText} (${distributionName}).`;
+          summaryText = `The video between ${minTime} and ${maxTime} that uses Fixed Runtime mode with ${slideCount} slides (approximately ${perSlide} seconds per slide), ${visualName} transitions, and ${songText} (${distributionName}).`;
           
         } else if (timingMode === 'perSlide') {
           const perSlide = parseInt(document.getElementById('perSlideSec').value) || 5;
@@ -2589,6 +2599,16 @@ function setupSlideshowPreview() {
           const minutes = Math.floor(estimatedSeconds / 60);
           const seconds = estimatedSeconds % 60;
           durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          // Calculate time range (± 9 seconds)
+          const minSeconds = Math.max(0, estimatedSeconds - 9);
+          const maxSeconds = estimatedSeconds + 9;
+          const minMinutes = Math.floor(minSeconds / 60);
+          const minSecs = minSeconds % 60;
+          const maxMinutes = Math.floor(maxSeconds / 60);
+          const maxSecs = maxSeconds % 60;
+          const minTime = `${minMinutes}:${minSecs.toString().padStart(2, '0')}`;
+          const maxTime = `${maxMinutes}:${maxSecs.toString().padStart(2, '0')}`;
           
           // Get visual package and music distribution
           const visualPackage = document.getElementById('visualPackage').value;
@@ -2611,13 +2631,23 @@ function setupSlideshowPreview() {
           const songCount = selectedSongs.length;
           const songText = songCount === 1 ? '1 song' : `${songCount} songs`;
           
-          summaryText = `Your ${durationText} video uses Per Slide Duration mode with ${slideCount} slides at ${perSlide} seconds per slide, ${visualName} transitions, and ${songText} (${distributionName}).`;
-          
+          summaryText = `The video between ${minTime} and ${maxTime} that uses Per Slide Duration mode with ${slideCount} slides at ${perSlide} seconds per slide, ${visualName} transitions, and ${songText} (${distributionName}).`;
+       
         } else if (timingMode === 'fitToSongs') {
           estimatedSeconds = totalMusicSeconds;
           const minutes = Math.floor(estimatedSeconds / 60);
           const seconds = estimatedSeconds % 60;
           durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+          
+          // Calculate time range (± 9 seconds)
+          const minSeconds = Math.max(0, estimatedSeconds - 9);
+          const maxSeconds = estimatedSeconds + 9;
+          const minMinutes = Math.floor(minSeconds / 60);
+          const minSecs = minSeconds % 60;
+          const maxMinutes = Math.floor(maxSeconds / 60);
+          const maxSecs = maxSeconds % 60;
+          const minTime = `${minMinutes}:${minSecs.toString().padStart(2, '0')}`;
+          const maxTime = `${maxMinutes}:${maxSecs.toString().padStart(2, '0')}`;
           
           const perSlide = (estimatedSeconds / slideCount).toFixed(1);
           
@@ -2635,7 +2665,7 @@ function setupSlideshowPreview() {
           const songCount = selectedSongs.length;
           const songText = songCount === 1 ? '1 song' : `${songCount} songs`;
           
-          summaryText = `Your ${durationText} video uses Fit to Music Length mode with ${slideCount} slides (approximately ${perSlide} seconds per slide), ${visualName} transitions, and ${songText} (automatically distributed to match music length).`;
+          summaryText = `The video between ${minTime} and ${maxTime} that uses Fit to Music Length mode with ${slideCount} slides (approximately ${perSlide} seconds per slide), ${visualName} transitions, and ${songText} (automatically distributed to match music length).`;
         }
         
         showLoading(false);
