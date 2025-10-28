@@ -1883,31 +1883,34 @@ function setupSlideshowPreview() {
     function updateCopyPreview(url) {
       const slideshowPreview = document.getElementById('slideshowPreview');
       const iframe = document.getElementById('previewIframe');
-      const urlDisplay = document.getElementById('previewUrl');
       const previewHeader = document.getElementById('previewHeader');
 
-     // Hide first
-     slideshowPreview.style.display = 'none';
-
-     if (url && url.includes('docs.google.com/presentation')) {
-       // --- Google Slides embed ---
-      const embedUrl = url.replace('/edit', '/embed');
-      previewHeader.textContent = '🔍 Preview: Your Google Slides Copy';
-      iframe.src = embedUrl;
-      urlDisplay.textContent = `URL: ${url}`;
-      slideshowPreview.style.display = 'block';
-    } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-      // --- PowerPoint/OneDrive embed ---
-      const embedUrl = convertSharePointToEmbedUrl(url);
-      previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
-      iframe.src = embedUrl;
-      urlDisplay.textContent = `URL: ${url}`;
-      slideshowPreview.style.display = 'block';
-      console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
-    } else {
+      // Hide first
       slideshowPreview.style.display = 'none';
+
+      if (url && url.includes('docs.google.com/presentation')) {
+        // --- Google Slides embed ---
+        const embedUrl = url.replace('/edit', '/embed');
+        previewHeader.textContent = '🔍 Preview: Your Google Slides Copy';
+        iframe.src = embedUrl;
+        document.getElementById('editSlidesButton').href = url;
+        slideshowPreview.style.display = 'block';
+      } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
+        // --- PowerPoint/OneDrive embed ---
+        let embedUrl = url;
+        if (!url.includes('action=embedview')) {
+          const separator = url.includes('?') ? '&' : '?';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
+        }
+        previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
+        iframe.src = embedUrl;
+        document.getElementById('editSlidesButton').href = url;
+        slideshowPreview.style.display = 'block';
+        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+      } else {
+        slideshowPreview.style.display = 'none';
+      }
     }
-  }
 
     
     function updatePowerPointUrlPreview(url) {
