@@ -1831,16 +1831,26 @@ function setupSlideshowPreview() {
     
     function handleSlideshowVersionChange(e) {
       const value = e.target.value;
-      
+      console.log('[DEBUG] Slideshow version changed to:', value);
+  
       // Update radio option selected class
       document.querySelectorAll('.radio-option').forEach(opt => {
         opt.classList.remove('selected');
       });
       e.target.closest('.radio-option').classList.add('selected');
-      
+  
       // Show/hide conditional inputs
-      document.getElementById('copyUrlInput').style.display = value === 'copy' ? 'block' : 'none';
-      document.getElementById('downloadInput').style.display = value === 'download' ? 'block' : 'none';
+      const copyInput = document.getElementById('copyUrlInput');
+      const downloadInput = document.getElementById('downloadInput');
+  
+      console.log('[DEBUG] copyUrlInput element:', copyInput);
+      console.log('[DEBUG] downloadInput element:', downloadInput);
+  
+      copyInput.style.display = value === 'copy' ? 'block' : 'none';
+      downloadInput.style.display = value === 'download' ? 'block' : 'none';
+  
+      console.log('[DEBUG] copyUrlInput display:', copyInput.style.display);
+      console.log('[DEBUG] downloadInput display:', downloadInput.style.display);
       
       // Handle preview visibility
       const slideshowPreview = document.getElementById('slideshowPreview');
