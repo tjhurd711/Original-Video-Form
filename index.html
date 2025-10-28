@@ -978,13 +978,30 @@
               <div class="radio-option-content">
                 <span class="radio-option-desc">Upload your PowerPoint file (.pptx) or provide a PowerPoint URL</span>
                 <div class="conditional-input" id="downloadInput" style="display:none;">
+                  <!-- Sub-choice: File or URL -->
                   <div style="margin-bottom: 12px;">
-                    <label for="pptxFile" style="font-size: 13px; margin-bottom: 6px;">Upload PowerPoint File:</label>
+                    <label style="font-size: 14px; font-weight: 600; color: #555; display: block; margin-bottom: 8px;">How would you like to provide your PowerPoint?</label>
+                    
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; cursor: pointer;">
+                      <input type="radio" name="pptxMethod" value="file" style="width: 18px; height: 18px;">
+                      <span style="font-weight: 600; font-size: 14px;">Upload File</span>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; cursor: pointer;">
+                      <input type="radio" name="pptxMethod" value="url" style="width: 18px; height: 18px;">
+                      <span style="font-weight: 600; font-size: 14px;">Provide URL</span>
+                    </label>
+                  </div>
+                  
+                  <!-- File Upload Section -->
+                  <div id="pptxFileSection" style="display:none; margin-bottom: 12px;">
+                    <label for="pptxFile" style="font-size: 13px; margin-bottom: 6px; display: block;">Upload PowerPoint File:</label>
                     <input type="file" id="pptxFile" name="pptxFile" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation">
                   </div>
-                  <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
-                    <div style="text-align: center; margin-bottom: 8px; font-weight: 600; font-size: 13px;">OR</div>
-                    <label for="pptxUrl" style="font-size: 13px; margin-bottom: 6px;">PowerPoint URL (OneDrive/SharePoint):</label>
+                  
+                  <!-- URL Section -->
+                  <div id="pptxUrlSection" style="display:none;">
+                    <label for="pptxUrl" style="font-size: 13px; margin-bottom: 6px; display: block;">PowerPoint URL (OneDrive/SharePoint):</label>
                     <input type="url" id="pptxUrl" name="pptxUrl" placeholder="https://onedrive.live.com/... or https://sharepoint.com/...">
                   </div>
                 </div>
@@ -1747,9 +1764,9 @@ function setupSlideshowPreview() {
 
     
     function setupEventListeners() {
-      // Slideshow version radio buttons
-      document.querySelectorAll('input[name="slideshowVersion"]').forEach(radio => {
-        radio.addEventListener('change', handleSlideshowVersionChange);
+      // PowerPoint method radio buttons (file vs URL)
+      document.querySelectorAll('input[name="pptxMethod"]').forEach(radio => {
+        radio.addEventListener('change', handlePptxMethodChange);
       });
       
       // New Google Slides URL input - update preview on input
@@ -1875,6 +1892,31 @@ function setupSlideshowPreview() {
         } else if (pptxUrl) {
           updatePowerPointUrlPreview(pptxUrl);
         }
+      }
+      
+      validateForm();
+    }
+
+    function handlePptxMethodChange(e) {
+      const value = e.target.value;
+      const fileSection = document.getElementById('pptxFileSection');
+      const urlSection = document.getElementById('pptxUrlSection');
+      const pptxFilePreview = document.getElementById('pptxFilePreview');
+      const slideshowPreview = document.getElementById('slideshowPreview');
+      
+      // Hide both sections and previews first
+      fileSection.style.display = 'none';
+      urlSection.style.display = 'none';
+      pptxFilePreview.style.display = 'none';
+      slideshowPreview.style.display = 'none';
+      
+      // Clear the opposite field
+      if (value === 'file') {
+        fileSection.style.display = 'block';
+        document.getElementById('pptxUrl').value = '';
+      } else if (value === 'url') {
+        urlSection.style.display = 'block';
+        document.getElementById('pptxFile').value = '';
       }
       
       validateForm();
