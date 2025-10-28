@@ -1843,13 +1843,19 @@ function setupSlideshowPreview() {
           if (slideshowUrl.includes('docs.google.com/presentation')) {
             embedUrl = slideshowUrl.replace('/edit', '/embed');
             previewHeader.textContent = '🔍 Preview: Original Slideshow';
-          } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com')) {
-            const encodedUrl = encodeURIComponent(slideshowUrl);
-            embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
+            document.getElementById('editSlidesButton').href = slideshowUrl;
+          } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('1drv.ms')) {
+            // Add embed parameters if not already present
+            if (!slideshowUrl.includes('action=embedview')) {
+              const separator = slideshowUrl.includes('?') ? '&' : '?';
+              embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
+            } else {
+              embedUrl = slideshowUrl;
+            }
             previewHeader.textContent = '🔍 Preview: Original PowerPoint';
+            document.getElementById('editSlidesButton').href = slideshowUrl;
           }
           iframe.src = embedUrl;
-          urlDisplay.textContent = `URL: ${slideshowUrl}`;
           slideshowPreview.style.display = 'block';
         }
       } else if (value === 'copy') {
