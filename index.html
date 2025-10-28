@@ -1764,6 +1764,11 @@ function setupSlideshowPreview() {
 
     
     function setupEventListeners() {
+      // Slideshow version radio buttons
+      document.querySelectorAll('input[name="slideshowVersion"]').forEach(radio => {
+        radio.addEventListener('change', handleSlideshowVersionChange);
+      });
+      
       // PowerPoint method radio buttons (file vs URL)
       document.querySelectorAll('input[name="pptxMethod"]').forEach(radio => {
         radio.addEventListener('change', handlePptxMethodChange);
