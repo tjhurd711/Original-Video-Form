@@ -1917,17 +1917,21 @@ function setupSlideshowPreview() {
       const slideshowPreview = document.getElementById('slideshowPreview');
       const pptxFilePreview = document.getElementById('pptxFilePreview');
       const iframe = document.getElementById('previewIframe');
-      const urlDisplay = document.getElementById('previewUrl');
       const previewHeader = document.getElementById('previewHeader');
 
       slideshowPreview.style.display = 'none';
       pptxFilePreview.style.display = 'none';
 
       if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        const embedUrl = convertSharePointToEmbedUrl(url);
+        // Add embed parameters if not already present
+        let embedUrl = url;
+        if (!url.includes('action=embedview')) {
+          const separator = url.includes('?') ? '&' : '?';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
+        }
         previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
         iframe.src = embedUrl;
-        urlDisplay.textContent = `URL: ${url}`;
+        document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
         console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
       }
