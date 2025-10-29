@@ -356,6 +356,8 @@
     .btn-add-library.added {
       background: #4CAF50;
     }
+
+    
     
     /* Song List */
     .song-list {
@@ -961,6 +963,22 @@
       
       .btn-add-library {
         min-width: 75px !important;
+      }
+
+      /* Make library card controls stack */
+      .library-song-card {
+        padding: 12px 8px;
+      }
+      
+      .library-song-controls {
+        flex-direction: column;
+        gap: 6px;
+      }
+      
+      .library-song-controls .btn-small,
+      .library-song-controls .btn-add-library {
+        width: 100%;
+        min-width: unset;
       }
       
       /* Stack transition section vertically */
