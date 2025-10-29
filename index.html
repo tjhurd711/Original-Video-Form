@@ -911,13 +911,53 @@
     
     @media (max-width: 768px) {
       .header h1 { font-size: 26px; }
-    
-    @media (max-width: 768px) {
-      .header h1 { font-size: 26px; }
       .section { padding: 20px; }
       .library-grid { grid-template-columns: 1fr; }
       .song-controls { flex-wrap: wrap; }
       .toast { right: 20px; left: 20px; max-width: none; }
+      
+      /* ✅ ADD THESE: */
+      
+      /* Stack transition preview vertically */
+      .section > div[style*="display: flex"] {
+        flex-direction: column !important;
+      }
+      
+      .section > div[style*="display: flex"] > div {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+      }
+      
+      /* Make buttons more touch-friendly */
+      .btn-small {
+        min-width: 80px;
+        padding: 8px 10px;
+      }
+      
+      /* Stack slide inputs vertically */
+      .slide-inputs {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Better song card spacing */
+      .library-song-controls {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      
+      /* Modal improvements */
+      .modal-content {
+        width: 95%;
+        margin: 20px;
+      }
+      
+      .modal-footer {
+        flex-direction: column;
+      }
+      
+      .modal-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
