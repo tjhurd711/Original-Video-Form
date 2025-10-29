@@ -229,6 +229,21 @@
       color: #1565c0;
     }
     
+    /* Transition Section Layout */
+    .transition-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    
+    .transition-dropdown {
+      flex: 0 0 280px;
+    }
+    
+    .transition-preview {
+      flex: 1;
+    }
+    
     /* Song Library */
     .library-section {
       background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%);
@@ -250,7 +265,7 @@
     
     .library-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 12px;
     }
     
@@ -302,6 +317,7 @@
       background: #2196F3;
       color: white;
       min-width: 110px;
+      flex-shrink: 0;
     }
     
     .btn-play:hover {
@@ -324,6 +340,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     
     .btn-add-library:hover:not(:disabled) {
@@ -912,43 +929,61 @@
     @media (max-width: 768px) {
       .header h1 { font-size: 26px; }
       .section { padding: 20px; }
-      .library-grid { grid-template-columns: 1fr; }
-      .song-controls { flex-wrap: wrap; }
-      .toast { right: 20px; left: 20px; max-width: none; }
+      .content { padding: 20px 15px; }
       
-      /* ✅ ADD THESE: */
+      /* Force song library to single column */
+      .library-grid { 
+        grid-template-columns: 1fr !important; 
+      }
       
-      /* Stack transition preview vertically */
-      .section > div[style*="display: flex"] {
+      /* Stack slide inputs vertically */
+      .slide-inputs { 
+        grid-template-columns: 1fr !important; 
+      }
+      
+      /* Wrap song controls */
+      .song-controls { 
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      
+      /* Smaller buttons on mobile */
+      .btn-small {
+        min-width: 70px;
+        padding: 6px 8px;
+        font-size: 12px;
+      }
+      
+      .btn-play {
+        min-width: 90px !important;
+      }
+      
+      .btn-add-library {
+        min-width: 75px !important;
+      }
+      
+      /* Stack transition section vertically */
+      .transition-container {
         flex-direction: column !important;
       }
       
-      .section > div[style*="display: flex"] > div {
+      .transition-dropdown,
+      .transition-preview {
         flex: 1 1 100% !important;
         max-width: 100% !important;
       }
       
-      /* Make buttons more touch-friendly */
-      .btn-small {
-        min-width: 80px;
-        padding: 8px 10px;
-      }
-      
-      /* Stack slide inputs vertically */
-      .slide-inputs {
-        grid-template-columns: 1fr !important;
-      }
-      
-      /* Better song card spacing */
-      .library-song-controls {
-        flex-wrap: wrap;
-        gap: 8px;
+      /* Toast notifications */
+      .toast { 
+        right: 10px; 
+        left: 10px; 
+        max-width: none; 
       }
       
       /* Modal improvements */
       .modal-content {
         width: 95%;
-        margin: 20px;
+        margin: 10px;
       }
       
       .modal-footer {
@@ -1190,43 +1225,43 @@
       
       <!-- SECTION 4: Transitions -->
       <div class="section">
-       <div class="section-header">
-         <span class="section-icon">🎨</span>
-         <span class="section-title">Transition Style</span>
-       </div>
-  
-       <div class="transition-container">
-         <!-- Left side: Dropdown -->
-         <div class="transition-dropdown">
-           <div class="form-group" style="margin-bottom: 0;">
-             <label for="visualPackage">
-               Visual Package
-               <div class="help-text">Choose the style of transitions between slides</div>
-             </label>
-             <select id="visualPackage" name="visualPackage">
-               <option value="simple-fade-wipe">Simple Fade & Wipe</option>
-               <option value="pages-of-life">Pages of Life</option>
-               <option value="floating-frames">Floating Frames</option>
-               <option value="zoom-through">Zoom Through</option>
-               <option value="blinds-combs-bars">Blinds, Combs & Bars</option>
-             </select>
-           </div>
-         </div>
-    
-         <!-- Right side: Video Preview -->
-         <div class="transition-preview">
-           <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
-             Preview
-           </label>
-           <div style="background: #000; border-radius: 8px; overflow: hidden;">
-             <video id="transitionPreview" controls preload="auto" style="width: 100%; display: block;">
-               <source id="transitionPreviewSource" src="https://www.dropbox.com/scl/fi/ij0b9ndn9mcg2me0ipb7y/Transition-Examples-Simple-Fade-and-Wipe-2.mp4?rlkey=pgrt4ad1qg3wy9203pv6c32zm&st=j9cme2mi&dl=1" type="video/mp4">
-               Your browser does not support the video tag.
-             </video>
-           </div>
-         </div>
-       </div>
-     </div>
+        <div class="section-header">
+          <span class="section-icon">🎨</span>
+          <span class="section-title">Transition Style</span>
+        </div>
+
+        <div class="transition-container">
+          <!-- Left side: Dropdown -->
+          <div class="transition-dropdown">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="visualPackage">
+                Visual Package
+                <div class="help-text">Choose the style of transitions between slides</div>
+              </label>
+              <select id="visualPackage" name="visualPackage">
+                <option value="simple-fade-wipe">Simple Fade & Wipe</option>
+                <option value="pages-of-life">Pages of Life</option>
+                <option value="floating-frames">Floating Frames</option>
+                <option value="zoom-through">Zoom Through</option>
+                <option value="blinds-combs-bars">Blinds, Combs & Bars</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Right side: Video Preview -->
+          <div class="transition-preview">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 14px;">
+              Preview
+            </label>
+            <div style="background: #000; border-radius: 8px; overflow: hidden;">
+              <video id="transitionPreview" controls preload="auto" style="width: 100%; display: block;">
+                <source id="transitionPreviewSource" src="https://www.dropbox.com/scl/fi/ij0b9ndn9mcg2me0ipb7y/Transition-Examples-Simple-Fade-and-Wipe-2.mp4?rlkey=pgrt4ad1qg3wy9203pv6c32zm&st=j9cme2mi&dl=1" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <!-- SECTION 5: Music Distribution -->
       <div class="section">
