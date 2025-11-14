@@ -1767,6 +1767,12 @@
       'blinds-combs-bars': 'https://www.dropbox.com/scl/fi/yu49ywzg9lnpfvbkpngun/Transition-Examples-Blinds-Combs-Bars-2.mp4?rlkey=itoxqenf61i2cm746kvn2fjbl&st=wk0xl254&raw=1'
     };
     
+    // Mobile detection helper
+    function isMobileDevice() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+        || window.innerWidth <= 768;
+    }
+    
     // Parse URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const uid = urlParams.get('uid');
@@ -1840,22 +1846,55 @@ function setupSlideshowPreview() {
       slideshowUrl.includes('onedrive.live.com') ||
       slideshowUrl.includes('1drv.ms')
     ) {
-      // Add embed parameters if not already present
-      if (!slideshowUrl.includes('action=embedview')) {
-        const separator = slideshowUrl.includes('?') ? '&' : '?';
-        embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1&em=2';
-      }
-
       previewHeader.textContent = '🔍 Preview: Original PowerPoint';
       previewSection.style.display = 'block';
-      iframe.src = embedUrl;
+      
+      if (isMobileDevice()) {
+        // Mobile: Show "tap to view" button instead of embed
+        const iframeContainer = iframe.parentElement;
+        iframe.style.display = 'none';
+        
+        const existingButton = iframeContainer.querySelector('.mobile-preview-btn');
+        if (!existingButton) {
+          const mobileButton = document.createElement('a');
+          mobileButton.href = slideshowUrl;
+          mobileButton.target = '_blank';
+          mobileButton.className = 'mobile-preview-btn';
+          mobileButton.style.cssText = `
+            display: block; 
+            padding: 40px; 
+            background: white; 
+            border: 2px solid #90caf9; 
+            border-radius: 8px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: #1565c0;
+            font-weight: 600; 
+            font-size: 16px;
+            margin: 10px 0;
+          `;
+          mobileButton.innerHTML = '📱 Tap to View PowerPoint in New Tab';
+          iframeContainer.appendChild(mobileButton);
+        }
+      } else {
+        // Desktop: Use embed
+        iframe.style.display = 'block';
+        const existingButton = iframe.parentElement.querySelector('.mobile-preview-btn');
+        if (existingButton) existingButton.remove();
+        
+        let embedUrl = slideshowUrl;
+        if (!slideshowUrl.includes('action=embedview')) {
+          const separator = slideshowUrl.includes('?') ? '&' : '?';
+          embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1&em=2';
+        }
+        iframe.src = embedUrl;
+      }
+      
       document.getElementById('editSlidesButton').href = slideshowUrl;
-
-      console.log('[PREVIEW] Using embedview URL:', embedUrl);
+      console.log('[PREVIEW] PowerPoint setup complete');
     }
-  }
+  } 
 }
-
     
     function setupEventListeners() {
       // Slideshow version radio buttons
@@ -1971,18 +2010,53 @@ function setupSlideshowPreview() {
             previewHeader.textContent = '🔍 Preview: Original Slideshow';
             document.getElementById('editSlidesButton').href = slideshowUrl;
           } else if (slideshowUrl.includes('onedrive.live.com') || slideshowUrl.includes('sharepoint.com') || slideshowUrl.includes('1drv.ms')) {
-            // Add embed parameters if not already present
+          previewHeader.textContent = '🔍 Preview: Original PowerPoint';
+          
+          if (isMobileDevice()) {
+            // Mobile: Show button
+            iframe.style.display = 'none';
+            const iframeContainer = iframe.parentElement;
+            const existingButton = iframeContainer.querySelector('.mobile-preview-btn');
+            if (!existingButton) {
+              const mobileButton = document.createElement('a');
+              mobileButton.href = slideshowUrl;
+              mobileButton.target = '_blank';
+              mobileButton.className = 'mobile-preview-btn';
+              mobileButton.style.cssText = `
+                display: block; 
+                padding: 40px; 
+                background: white; 
+                border: 2px solid #90caf9; 
+                border-radius: 8px; 
+                text-align: center; 
+                text-decoration: none; 
+                color: #1565c0;
+                font-weight: 600; 
+                font-size: 16px;
+                margin: 10px 0;
+              `;
+              mobileButton.innerHTML = '📱 Tap to View PowerPoint in New Tab';
+              iframeContainer.appendChild(mobileButton);
+            }
+          } else {
+            // Desktop: Use embed
+            iframe.style.display = 'block';
+            const existingButton = iframe.parentElement.querySelector('.mobile-preview-btn');
+            if (existingButton) existingButton.remove();
+            
+            let embedUrl = slideshowUrl;
             if (!slideshowUrl.includes('action=embedview')) {
               const separator = slideshowUrl.includes('?') ? '&' : '?';
               embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1&em=2';
             } else {
               embedUrl = slideshowUrl;
             }
-            previewHeader.textContent = '🔍 Preview: Original PowerPoint';
-            document.getElementById('editSlidesButton').href = slideshowUrl;
+            iframe.src = embedUrl;
           }
-          iframe.src = embedUrl;
+          
+          document.getElementById('editSlidesButton').href = slideshowUrl;
           slideshowPreview.style.display = 'block';
+        }
         }
       } else if (value === 'copy') {
         // Preview will update when user enters URL (handled in input event listener)
@@ -2047,17 +2121,55 @@ function setupSlideshowPreview() {
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
       } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // --- PowerPoint/OneDrive embed ---
-        let embedUrl = url;
-        if (!url.includes('action=embedview')) {
-          const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
-        }
         previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
-        iframe.src = embedUrl;
+        
+        if (isMobileDevice()) {
+          // Mobile: Show button
+          const iframeContainer = iframe.parentElement;
+          iframe.style.display = 'none';
+          
+          let existingButton = iframeContainer.querySelector('.mobile-preview-btn');
+          if (existingButton) {
+            existingButton.href = url;
+          } else {
+            const mobileButton = document.createElement('a');
+            mobileButton.href = url;
+            mobileButton.target = '_blank';
+            mobileButton.className = 'mobile-preview-btn';
+            mobileButton.style.cssText = `
+              display: block; 
+              padding: 40px; 
+              background: white; 
+              border: 2px solid #90caf9; 
+              border-radius: 8px; 
+              text-align: center; 
+              text-decoration: none; 
+              color: #1565c0;
+              font-weight: 600; 
+              font-size: 16px;
+              margin: 10px 0;
+            `;
+            mobileButton.innerHTML = '📱 Tap to View PowerPoint in New Tab';
+            iframeContainer.appendChild(mobileButton);
+          }
+        } else {
+          // Desktop: Use embed
+          iframe.style.display = 'block';
+          const existingButton = iframe.parentElement.querySelector('.mobile-preview-btn');
+          if (existingButton) existingButton.remove();
+          
+          let embedUrl = url;
+          if (!url.includes('action=embedview')) {
+            const separator = url.includes('?') ? '&' : '?';
+            embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
+          }
+          iframe.src = embedUrl;
+        }
+        
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
-        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        console.log('[PREVIEW] PowerPoint copy preview updated');
+      }
       } else {
         slideshowPreview.style.display = 'none';
       }
@@ -2074,17 +2186,54 @@ function setupSlideshowPreview() {
       pptxFilePreview.style.display = 'none';
 
       if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // Add embed parameters if not already present
-        let embedUrl = url;
-        if (!url.includes('action=embedview')) {
-          const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
-        }
         previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
-        iframe.src = embedUrl;
+        
+        if (isMobileDevice()) {
+          // Mobile: Show button
+          const iframeContainer = iframe.parentElement;
+          iframe.style.display = 'none';
+          
+          let existingButton = iframeContainer.querySelector('.mobile-preview-btn');
+          if (existingButton) {
+            existingButton.href = url;
+          } else {
+            const mobileButton = document.createElement('a');
+            mobileButton.href = url;
+            mobileButton.target = '_blank';
+            mobileButton.className = 'mobile-preview-btn';
+            mobileButton.style.cssText = `
+              display: block; 
+              padding: 40px; 
+              background: white; 
+              border: 2px solid #90caf9; 
+              border-radius: 8px; 
+              text-align: center; 
+              text-decoration: none; 
+              color: #1565c0;
+              font-weight: 600; 
+              font-size: 16px;
+              margin: 10px 0;
+            `;
+            mobileButton.innerHTML = '📱 Tap to View PowerPoint in New Tab';
+            iframeContainer.appendChild(mobileButton);
+          }
+        } else {
+          // Desktop: Use embed
+          iframe.style.display = 'block';
+          const existingButton = iframe.parentElement.querySelector('.mobile-preview-btn');
+          if (existingButton) existingButton.remove();
+          
+          let embedUrl = url;
+          if (!url.includes('action=embedview')) {
+            const separator = url.includes('?') ? '&' : '?';
+            embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
+          }
+          iframe.src = embedUrl;
+        }
+        
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
-        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        console.log('[PREVIEW] PowerPoint URL preview updated');
       }
     }
     
