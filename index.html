@@ -1840,18 +1840,15 @@ function setupSlideshowPreview() {
       slideshowUrl.includes('onedrive.live.com') ||
       slideshowUrl.includes('1drv.ms')
     ) {
-      // Add embed parameters if not already present
-      if (!slideshowUrl.includes('action=embedview')) {
-        const separator = slideshowUrl.includes('?') ? '&' : '?';
-        embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
-      }
+      // Use Office Online Viewer for better mobile compatibility (no sign-in required)
+      embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(slideshowUrl)}`;
 
       previewHeader.textContent = '🔍 Preview: Original PowerPoint';
       previewSection.style.display = 'block';
       iframe.src = embedUrl;
       document.getElementById('editSlidesButton').href = slideshowUrl;
 
-      console.log('[PREVIEW] Using embedview URL:', embedUrl);
+      console.log('[PREVIEW] Using Office Online Viewer URL:', embedUrl);
     }
   }
 }
@@ -2047,17 +2044,14 @@ function setupSlideshowPreview() {
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
       } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // --- PowerPoint/OneDrive embed ---
-        let embedUrl = url;
-        if (!url.includes('action=embedview')) {
-          const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
-        }
+        // --- PowerPoint/OneDrive embed using Office Online Viewer ---
+        embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+  
         previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
         iframe.src = embedUrl;
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
-        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        console.log('[PREVIEW] PowerPoint Office Online Viewer URL:', embedUrl);
       } else {
         slideshowPreview.style.display = 'none';
       }
@@ -2074,17 +2068,14 @@ function setupSlideshowPreview() {
       pptxFilePreview.style.display = 'none';
 
       if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // Add embed parameters if not already present
-        let embedUrl = url;
-        if (!url.includes('action=embedview')) {
-          const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
-        }
+        // Use Office Online Viewer for better mobile compatibility
+        embedUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+  
         previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
         iframe.src = embedUrl;
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
-        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        console.log('[PREVIEW] PowerPoint Office Online Viewer URL:', embedUrl);
       }
     }
     
