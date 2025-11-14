@@ -1840,41 +1840,21 @@ function setupSlideshowPreview() {
       slideshowUrl.includes('onedrive.live.com') ||
       slideshowUrl.includes('1drv.ms')
     ) {
-      // Detect mobile devices
-      const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
-      
-      if (isMobile) {
-        // Mobile: Show message with link
-        previewHeader.textContent = '📄 PowerPoint Preview';
-        const messageDiv = document.createElement('div');
-        messageDiv.style.cssText = 'padding: 30px; text-align: center; background: white; border-radius: 8px;';
-        messageDiv.innerHTML = `
-          <p style="margin-bottom: 20px; color: #666; font-size: 15px;">
-            PowerPoint previews work best on desktop. Click below to view:
-          </p>
-          <a href="${slideshowUrl}" target="_blank" 
-             style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                    color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-            📊 Open PowerPoint
-          </a>
-        `;
-        iframe.style.display = 'none';
-        iframe.parentElement.appendChild(messageDiv);
-      } else {
-        // Desktop: Use direct embed
-        embedUrl = slideshowUrl;
-        if (!slideshowUrl.includes('action=embedview')) {
-          const separator = slideshowUrl.includes('?') ? '&' : '?';
-          embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
-        }
-        previewHeader.textContent = '🔍 Preview: Original PowerPoint';
-        iframe.src = embedUrl;
+      // Add embed parameters if not already present
+      if (!slideshowUrl.includes('action=embedview')) {
+        const separator = slideshowUrl.includes('?') ? '&' : '?';
+        embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
       }
-      
+
+      previewHeader.textContent = '🔍 Preview: Original PowerPoint';
       previewSection.style.display = 'block';
+      iframe.src = embedUrl;
       document.getElementById('editSlidesButton').href = slideshowUrl;
-      console.log('[PREVIEW] PowerPoint setup complete');
+
+      console.log('[PREVIEW] Using embedview URL:', embedUrl);
     }
+  }
+}
 
     
     function setupEventListeners() {
@@ -2067,56 +2047,17 @@ function setupSlideshowPreview() {
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
       } else if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        // --- PowerPoint/OneDrive handling ---
-        
-        // Detect mobile devices
-        const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-          // Mobile: Show message with link instead of embed
-          previewHeader.textContent = '📄 PowerPoint Preview';
-          iframe.style.display = 'none';
-          
-          const messageDiv = document.createElement('div');
-          messageDiv.style.cssText = 'padding: 30px; text-align: center; background: white; border-radius: 8px;';
-          messageDiv.innerHTML = `
-            <p style="margin-bottom: 20px; color: #666; font-size: 15px;">
-              PowerPoint previews work best on desktop. Click below to view in a new tab:
-            </p>
-            <a href="${url}" target="_blank" 
-               style="display: inline-block; 
-                      padding: 14px 28px; 
-                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                      color: white; 
-                      text-decoration: none; 
-                      border-radius: 8px; 
-                      font-weight: 600; 
-                      font-size: 16px;">
-              📊 Open PowerPoint
-            </a>
-          `;
-          
-          // Clear and add message
-          const container = iframe.parentElement;
-          container.innerHTML = '';
-          container.appendChild(messageDiv);
-          
-          slideshowPreview.style.display = 'block';
-        } else {
-          // Desktop: Use direct embed with action=embedview
-          iframe.style.display = 'block';
-          let embedUrl = url;
-          if (!url.includes('action=embedview')) {
-            const separator = url.includes('?') ? '&' : '?';
-            embedUrl = url + separator + 'action=embedview&wdStartOn=1';
-          }
-          
-          previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
-          iframe.src = embedUrl;
-          document.getElementById('editSlidesButton').href = url;
-          slideshowPreview.style.display = 'block';
-          console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        // --- PowerPoint/OneDrive embed ---
+        let embedUrl = url;
+        if (!url.includes('action=embedview')) {
+          const separator = url.includes('?') ? '&' : '?';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
         }
+        previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
+        iframe.src = embedUrl;
+        document.getElementById('editSlidesButton').href = url;
+        slideshowPreview.style.display = 'block';
+        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
       } else {
         slideshowPreview.style.display = 'none';
       }
@@ -2133,45 +2074,17 @@ function setupSlideshowPreview() {
       pptxFilePreview.style.display = 'none';
 
       if (url && (url.includes('sharepoint.com') || url.includes('onedrive.live.com') || url.includes('1drv.ms'))) {
-        const isMobile = /iPad|iPhone|iPod|Android/i.test(navigator.userAgent);
-        
-        if (isMobile) {
-          // Mobile: Show link
-          previewHeader.textContent = '📄 PowerPoint Preview';
-          iframe.style.display = 'none';
-          
-          const messageDiv = document.createElement('div');
-          messageDiv.style.cssText = 'padding: 30px; text-align: center; background: white; border-radius: 8px;';
-          messageDiv.innerHTML = `
-            <p style="margin-bottom: 20px; color: #666; font-size: 15px;">
-              PowerPoint previews work best on desktop. Click below to view:
-            </p>
-            <a href="${url}" target="_blank" 
-               style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                      color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-              📊 Open PowerPoint
-            </a>
-          `;
-          
-          const container = iframe.parentElement;
-          container.innerHTML = '';
-          container.appendChild(messageDiv);
-        } else {
-          // Desktop: Use embed
-          iframe.style.display = 'block';
-          let embedUrl = url;
-          if (!url.includes('action=embedview')) {
-            const separator = url.includes('?') ? '&' : '?';
-            embedUrl = url + separator + 'action=embedview&wdStartOn=1';
-          }
-          
-          previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
-          iframe.src = embedUrl;
-          console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
+        // Add embed parameters if not already present
+        let embedUrl = url;
+        if (!url.includes('action=embedview')) {
+          const separator = url.includes('?') ? '&' : '?';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
         }
-        
+        previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
+        iframe.src = embedUrl;
         document.getElementById('editSlidesButton').href = url;
         slideshowPreview.style.display = 'block';
+        console.log('[PREVIEW] PowerPoint embed URL:', embedUrl);
       }
     }
     
