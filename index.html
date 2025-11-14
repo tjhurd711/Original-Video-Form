@@ -1843,7 +1843,7 @@ function setupSlideshowPreview() {
       // Add embed parameters if not already present
       if (!slideshowUrl.includes('action=embedview')) {
         const separator = slideshowUrl.includes('?') ? '&' : '?';
-        embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
+        embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1&em=2';
       }
 
       previewHeader.textContent = '🔍 Preview: Original PowerPoint';
@@ -1974,7 +1974,7 @@ function setupSlideshowPreview() {
             // Add embed parameters if not already present
             if (!slideshowUrl.includes('action=embedview')) {
               const separator = slideshowUrl.includes('?') ? '&' : '?';
-              embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1';
+              embedUrl = slideshowUrl + separator + 'action=embedview&wdStartOn=1&em=2';
             } else {
               embedUrl = slideshowUrl;
             }
@@ -2051,7 +2051,7 @@ function setupSlideshowPreview() {
         let embedUrl = url;
         if (!url.includes('action=embedview')) {
           const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
         }
         previewHeader.textContent = '🔍 Preview: Your PowerPoint Copy';
         iframe.src = embedUrl;
@@ -2078,7 +2078,7 @@ function setupSlideshowPreview() {
         let embedUrl = url;
         if (!url.includes('action=embedview')) {
           const separator = url.includes('?') ? '&' : '?';
-          embedUrl = url + separator + 'action=embedview&wdStartOn=1';
+          embedUrl = url + separator + 'action=embedview&wdStartOn=1&em=2';
         }
         previewHeader.textContent = '🔍 Preview: PowerPoint (Online)';
         iframe.src = embedUrl;
