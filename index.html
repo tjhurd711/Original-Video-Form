@@ -1128,7 +1128,7 @@
           </div>
         </div>
         
-        <!-- Slideshow Preview (Conditional) -->
+<!-- Slideshow Preview (Conditional) -->
         <div id="slideshowPreview" class="preview-section" style="display:none;">
           <div class="preview-header" id="previewHeader">
             🔍 Preview: Slideshow
@@ -1150,14 +1150,26 @@
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
               🎨 Edit My Slides (edits will auto-save)
             </a>
-          <button onclick="refreshPreview()"
-                  class="refresh-preview-btn"
-                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
-                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
-           🔄 Refresh Preview
-          </button>
+            <button onclick="refreshPreview()"
+                    style="display: inline-block; 
+                           padding: 14px 28px; 
+                           background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+                           color: white; 
+                           text-decoration: none; 
+                           border-radius: 8px; 
+                           font-weight: 600; 
+                           font-size: 16px;
+                           transition: all 0.3s;
+                           box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+                           border: none;
+                           cursor: pointer;
+                           margin-left: 12px;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
+              🔄 Refresh Preview
+            </button>
+          </div>
         </div>
-      </div>
         
         <!-- PowerPoint File Preview (Filename only) -->
         <div id="pptxFilePreview" class="preview-section" style="display:none; background: #fff9e6; border-color: #FF9800;">
