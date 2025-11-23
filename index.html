@@ -1222,9 +1222,9 @@
           <div class="radio-group">
             <label class="radio-option">
               <input type="radio" name="timingMode" value="perSlide">
-              <span class="radio-option-label">Per Slide Duration</span>
+              <span class="radio-option-label">Set Seconds Per Slide</span>
               <div class="radio-option-content">
-                <span class="radio-option-desc">Set how many seconds each slide should display</span>
+                <span class="radio-option-desc">Great for scene timing (normal range 5-7 seconds per slide)</span>
                 <div class="conditional-input" id="perSlideInput" style="display:none;">
                   <label for="perSlideSec" style="font-size: 13px; margin-bottom: 6px;">Seconds per slide:</label>
                   <input type="number" id="perSlideSec" name="perSlideSec" min="2" max="30" value="5">
@@ -1234,9 +1234,9 @@
             
             <label class="radio-option selected">
               <input type="radio" name="timingMode" value="fixedRuntime" checked>
-              <span class="radio-option-label">Fixed Total Runtime</span>
+              <span class="radio-option-label">Set a total video runtime (i.e. 10 minutes)</span>
               <div class="radio-option-content">
-                <span class="radio-option-desc">Set the total video length in seconds (recommended)</span>
+                <span class="radio-option-desc">Great for meeting event agenda time requirements</span>
                 <div class="conditional-input" id="fixedRuntimeInput">
                   <label for="fixedRuntimeSec" style="font-size: 13px; margin-bottom: 6px;">Total runtime (seconds):</label>
                   <input type="number" id="fixedRuntimeSec" name="fixedRuntimeSec" min="30" max="1800" value="350">
@@ -1246,9 +1246,9 @@
             
             <label class="radio-option">
               <input type="radio" name="timingMode" value="fitToSongs">
-              <span class="radio-option-label">Fit to Music Length</span>
+              <span class="radio-option-label">Set video length to the full runtime of my songs</span>
               <div class="radio-option-content">
-                <span class="radio-option-desc">Video duration matches your music (automatic)</span>
+                <span class="radio-option-desc">Perfect for those who do not want partial songs</span>
               </div>
             </label>
           </div>
