@@ -1016,6 +1016,27 @@
       .modal-btn {
         width: 100%;
       }
+      /* Refresh Preview Button */
+    .refresh-preview-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+      margin-left: 12px;
+    }
+
+    .refresh-preview-btn:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4);
     }
   </style>
 </head>
@@ -1130,8 +1151,10 @@
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)';">
               🎨 Edit My Slides (edits will auto-save)
             </a>
-          </div>
-        
+          <button onclick="refreshPreview()" class="refresh-preview-btn">
+            🔄 Refresh Preview
+          </button>
+        </div>
         
         <!-- PowerPoint File Preview (Filename only) -->
         <div id="pptxFilePreview" class="preview-section" style="display:none; background: #fff9e6; border-color: #FF9800;">
@@ -3417,6 +3440,18 @@ function setupSlideshowPreview() {
       document.getElementById('musicTermsModal').classList.remove('show');
       // Trigger the file input
       document.getElementById('customSongUpload').click();
+    }
+
+    function refreshPreview() {
+      const iframe = document.getElementById('previewIframe');
+      const currentSrc = iframe.src;
+      
+      // Only refresh if there's actually something in the iframe
+      if (currentSrc) {
+        showToast('Refreshing preview...', 'success');
+        // Simply reload the same URL - forces fresh fetch
+        iframe.src = currentSrc;
+      }
     }
 
     </script>
