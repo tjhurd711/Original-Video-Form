@@ -1253,8 +1253,36 @@
               <div class="radio-option-content">
                 <span class="radio-option-desc">Great for meeting event agenda time requirements</span>
                 <div class="conditional-input" id="fixedRuntimeInput">
-                  <label for="fixedRuntimeSec" style="font-size: 13px; margin-bottom: 6px;">Total runtime (seconds):</label>
-                  <input type="number" id="fixedRuntimeSec" name="fixedRuntimeSec" min="30" max="1800" value="350">
+                  <label style="font-size: 13px; margin-bottom: 6px;">Total runtime:</label>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
+                    <select id="fixedRuntimeMinutes" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 15px; width: 80px;">
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6" selected>6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                    </select>
+                    <span style="font-weight: 600; color: #555;">minutes</span>
+                    <select id="fixedRuntimeSeconds" style="padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 15px; width: 80px;">
+                      <option value="0" selected>00</option>
+                      <option value="30">30</option>
+                    </select>
+                    <span style="font-weight: 600; color: #555;">seconds</span>
+                  </div>
                 </div>
               </div>
             </label>
@@ -1950,6 +1978,13 @@
     let selectedSongs = [];
     let currentlyPlayingAudio = null;
     let songRanges = [];
+
+    // Helper function to get total seconds from minute/second dropdowns
+    function getFixedRuntimeSeconds() {
+      const minutes = parseInt(document.getElementById('fixedRuntimeMinutes').value) || 6;
+      const seconds = parseInt(document.getElementById('fixedRuntimeSeconds').value) || 0;
+      return (minutes * 60) + seconds;
+    }
     
     // Initialize
     if (!uid || !email) {
@@ -2124,7 +2159,8 @@ function setupSlideshowPreview() {
 
       // Duration calculator triggers
       document.getElementById('perSlideSec').addEventListener('input', calculateVideoDuration);
-      document.getElementById('fixedRuntimeSec').addEventListener('input', calculateVideoDuration);
+      document.getElementById('fixedRuntimeMinutes').addEventListener('change', calculateVideoDuration);
+      document.getElementById('fixedRuntimeSeconds').addEventListener('change', calculateVideoDuration);
       
       // Submit button
       document.getElementById('submitBtn').addEventListener('click', calculateVideo);
@@ -3030,7 +3066,7 @@ function setupSlideshowPreview() {
         }
         
         if (timingMode === 'fixedRuntime') {
-          estimatedSeconds = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+          estimatedSeconds = getFixedRuntimeSeconds();
           const minutes = Math.floor(estimatedSeconds / 60);
           const seconds = estimatedSeconds % 60;
           durationText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
@@ -3258,7 +3294,7 @@ function setupSlideshowPreview() {
         };
         
         if (timingMode === 'fixedRuntime') {
-          settings.fixedRuntimeSec = parseInt(document.getElementById('fixedRuntimeSec').value) || 350;
+          settings.fixedRuntimeSec = getFixedRuntimeSeconds();
         } else if (timingMode === 'perSlide') {
           settings.perSlideSec = parseInt(document.getElementById('perSlideSec').value) || 5;
         }
