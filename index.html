@@ -1037,6 +1037,18 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
     }
+    
+    .validation-message {
+      margin-top: 15px;
+      padding: 12px 20px;
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      color: #856404;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -1391,6 +1403,8 @@
         <p class="submit-note" style="color: #667eea;">
           We'll calculate your video length and show you a preview before creating it
         </p>
+        
+        <div id="validationMessage" class="validation-message" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -2779,51 +2793,64 @@ function setupSlideshowPreview() {
     function validateForm() {
       const slideshowVersion = document.querySelector('input[name="slideshowVersion"]:checked').value;
       const submitBtn = document.getElementById('submitBtn');
+      const validationMsg = document.getElementById('validationMessage');
       
-      let isValid = true;
+      let issues = [];
       
       // Check slideshow
       if (slideshowVersion === 'copy') {
         const newUrl = document.getElementById('newGoogleSlidesUrl').value;
         if (!newUrl || !newUrl.includes('docs.google.com/presentation')) {
-          isValid = false;
+          issues.push('Enter a valid Google Slides URL');
         }
       } else if (slideshowVersion === 'download') {
         const pptxFile = document.getElementById('pptxFile').files[0];
         const pptxUrl = document.getElementById('pptxUrl').value;
         if (!pptxFile && !pptxUrl) {
-          isValid = false;
+          issues.push('Upload a PowerPoint file or provide a URL');
         }
       }
       
       // Check songs
       if (selectedSongs.length === 0) {
-        isValid = false;
+        issues.push('Select at least one song');
       }
 
       // Check song ranges if Specify Placement is selected
       const musicDistribution = document.getElementById('musicDistribution').value;
       if (musicDistribution === 'specifyPlacement' && selectedSongs.length > 0) {
+        let rangesValid = true;
         for (let i = 0; i < selectedSongs.length; i++) {
           const startInput = document.getElementById(`songRange${i}Start`);
           const endInput = document.getElementById(`songRange${i}End`);
-    
+
           if (!startInput || !endInput || !startInput.value || !endInput.value) {
-            isValid = false;
+            rangesValid = false;
             break;
           }
-    
+
           const start = parseInt(startInput.value);
           const end = parseInt(endInput.value);
-    
+
           if (start < 1 || end < 1 || start > end) {
-            isValid = false;
+            rangesValid = false;
             break;
           }
         }
+        if (!rangesValid) {
+          issues.push('Complete all song slide ranges (start must be ≤ end)');
+        }
       }
       
-      submitBtn.disabled = !isValid;
+      // Update UI
+      if (issues.length > 0) {
+        submitBtn.disabled = true;
+        validationMsg.innerHTML = '⚠️ ' + issues.join(' • ');
+        validationMsg.style.display = 'block';
+      } else {
+        submitBtn.disabled = false;
+        validationMsg.style.display = 'none';
+      }
     }
 
     // Handle music distribution change
