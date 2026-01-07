@@ -1992,6 +1992,7 @@
     let selectedSongs = [];
     let currentlyPlayingAudio = null;
     let songRanges = [];
+    let cachedPresentationUrl = null;  // Cache uploaded PPTX URL to avoid double upload
 
     // Helper function to get total seconds from minute/second dropdowns
     function getFixedRuntimeSeconds() {
@@ -2176,8 +2177,6 @@ function setupSlideshowPreview() {
       document.getElementById('fixedRuntimeMinutes').addEventListener('change', calculateVideoDuration);
       document.getElementById('fixedRuntimeSeconds').addEventListener('change', calculateVideoDuration);
       
-      // Submit button
-      document.getElementById('submitBtn').addEventListener('click', calculateVideo);
     }
     
     function handleSlideshowVersionChange(e) {
@@ -3023,9 +3022,10 @@ function setupSlideshowPreview() {
           const pptxUrl = document.getElementById('pptxUrl').value;
           
           if (pptxFile) {
-            // Upload file to S3 first
+            // Upload file to S3 first (and cache for finalSubmit)
             showToast('Uploading presentation...', 'success');
             const uploadedUrl = await uploadFileToS3(pptxFile, 'presentation');
+            cachedPresentationUrl = uploadedUrl;
             presentationType = 'powerpoint_file';
             presentationSource = uploadedUrl;
           } else if (pptxUrl) {
@@ -3249,11 +3249,16 @@ function setupSlideshowPreview() {
           const pptxUrl = document.getElementById('pptxUrl').value;
           
           if (pptxFile) {
-            // Upload file to S3
-            showToast('Uploading presentation...', 'success');
-            const uploadedUrl = await uploadFileToS3(pptxFile, 'presentation');
-            presentationType = 'powerpoint_file';
-            presentationSource = uploadedUrl;
+            // Use cached URL from calculateVideo() if available
+            if (cachedPresentationUrl) {
+              presentationType = 'powerpoint_file';
+              presentationSource = cachedPresentationUrl;
+            } else {
+              showToast('Uploading presentation...', 'success');
+              const uploadedUrl = await uploadFileToS3(pptxFile, 'presentation');
+              presentationType = 'powerpoint_file';
+              presentationSource = uploadedUrl;
+            }
           } else if (pptxUrl) {
             presentationType = 'powerpoint_url';
             presentationSource = pptxUrl;
