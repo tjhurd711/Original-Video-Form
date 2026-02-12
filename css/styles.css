@@ -1,4 +1,5 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: hidden; }
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -929,6 +930,10 @@
       .header h1 { font-size: 26px; }
       .section { padding: 20px; }
       .content { padding: 20px 15px; }
+      .radio-option {
+        flex-direction: column;
+        align-items: stretch;
+      }
       .header-logo {
         width: 100%;
         max-width: 100%;
@@ -946,6 +951,10 @@
       }
       
       /* Wrap song controls */
+      .song-item {
+        flex-direction: column;
+        align-items: stretch;
+      }
       .song-controls { 
         flex-wrap: wrap;
         gap: 8px;
@@ -964,6 +973,12 @@
       
       .btn-add-library {
         min-width: 75px !important;
+      }
+      
+      .song-controls .btn-small,
+      .song-controls .btn-play,
+      .song-controls .btn-add-library {
+        min-width: unset !important;
       }
 
       /* Make library card controls stack */
