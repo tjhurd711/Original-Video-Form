@@ -921,6 +921,11 @@
       .header h1 { font-size: 26px; }
       .section { padding: 20px; }
       .content { padding: 20px 15px; }
+      .header-logo {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+      }
       
       /* Force song library to single column */
       .library-grid { 
