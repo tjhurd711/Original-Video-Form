@@ -934,6 +934,18 @@
         flex-direction: column;
         align-items: stretch;
       }
+      .radio-option-content {
+        width: 100%;
+      }
+      .radio-option-label,
+      .radio-option-desc {
+        white-space: normal;
+        word-break: break-word;
+      }
+      .conditional-input {
+        width: 100%;
+        box-sizing: border-box;
+      }
       .header-logo {
         width: 100%;
         max-width: 100%;
